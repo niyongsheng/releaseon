@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.releaseon.domain.entity.Storage;
 import org.releaseon.service.StorageService;
 import org.releaseon.storage.StorageUtil;
-import org.releaseon.utils.CharUtil;
 import org.releaseon.utils.response.BaseResponse;
 import org.releaseon.utils.response.ResponseUtil;
 
@@ -25,22 +24,6 @@ public class StorageController {
     private StorageUtil storageUtil;
     @Autowired
     private StorageService storageService;
-
-    private String generateKey(String originalFilename) {
-        int index = originalFilename.lastIndexOf('.');
-        String suffix = originalFilename.substring(index);
-
-        String key = null;
-        Storage storageInfo = null;
-
-        do {
-            key = CharUtil.generate(20) + suffix;
-            storageInfo = storageService.findByKey(key);
-        }
-        while (storageInfo != null);
-
-        return key;
-    }
 
     @RequiresAuthentication
     @PostMapping("/upload")
@@ -56,54 +39,47 @@ public class StorageController {
     }
 
     /**
-     * 访问存储对象
-     *
-     * @param key 存储对象key
-     * @return
+     * 访问存储对象（内联预览）
      */
     @GetMapping("/fetch/{key:.+}")
     public ResponseEntity<Resource> fetch(@PathVariable String key) {
-        Storage Storage = storageService.findByKey(key);
-        if (key == null) {
-            return ResponseEntity.notFound().build();
-        }
-        if (key.contains("../")) {
-            return ResponseEntity.badRequest().build();
-        }
-        String type = Storage.getType();
-        MediaType mediaType = MediaType.parseMediaType(type);
-
-        Resource file = storageUtil.loadAsResource(key);
-        if (file == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().contentType(mediaType).body(file);
+        return loadResource(key, false);
     }
 
     /**
-     * 访问存储对象
-     *
-     * @param key 存储对象key
-     * @return
+     * 下载存储对象（强制下载）
      */
     @GetMapping("/download/{key:.+}")
     public ResponseEntity<Resource> download(@PathVariable String key) {
-        Storage Storage = storageService.findByKey(key);
-        if (key == null) {
-            return ResponseEntity.notFound().build();
-        }
-        if (key.contains("../")) {
+        return loadResource(key, true);
+    }
+
+    /**
+     * 加载存储资源
+     *
+     * @param key        存储对象 key
+     * @param asDownload 是否以附件形式下载（true 则添加 Content-Disposition 头）
+     */
+    private ResponseEntity<Resource> loadResource(String key, boolean asDownload) {
+        if (key == null || key.contains("../")) {
             return ResponseEntity.badRequest().build();
         }
+        Storage storage = storageService.findByKey(key);
+        if (storage == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        String type = Storage.getType();
-        MediaType mediaType = MediaType.parseMediaType(type);
-
+        MediaType mediaType = MediaType.parseMediaType(storage.getType());
         Resource file = storageUtil.loadAsResource(key);
         if (file == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().contentType(mediaType).header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+
+        ResponseEntity.BodyBuilder builder = ResponseEntity.ok().contentType(mediaType);
+        if (asDownload) {
+            builder.header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=\"" + file.getFilename() + "\"");
+        }
+        return builder.body(file);
     }
 }

@@ -5,11 +5,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 import org.releaseon.domain.entity.Storage;
 import org.releaseon.utils.CharUtil;
-import org.releaseon.utils.file.FileType;
-import org.releaseon.utils.file.FileUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -46,16 +43,27 @@ public class StorageUtil {
         this.storage = storage;
     }
 
+    /** ZIP 文件魔数前 4 字节 */
+    private static final byte[] ZIP_MAGIC = {0x50, 0x4B, 0x03, 0x04};
 
     /**
-     * 检测并转存文件
-     * @param inputStream
-     * @param contentType
-     * @param fileName
-     * @return
+     * 检测是否是有效的 ZIP 文件（APK/IPA 都是 ZIP 格式），然后转存到临时目录。
+     * 使用 PushbackInputStream 在不消耗输入流的情况下先检查文件头，
+     * 避免无效文件写入磁盘后再删除的浪费。
      */
     public String checkAndTransfer(InputStream inputStream, String contentType, String fileName) {
         try {
+            // 先读取前 4 字节检查 ZIP 魔数
+            PushbackInputStream pushback = new PushbackInputStream(inputStream, 4);
+            byte[] header = new byte[4];
+            int bytesRead = pushback.read(header);
+            if (bytesRead < 4 || header[0] != ZIP_MAGIC[0] || header[1] != ZIP_MAGIC[1]
+                    || header[2] != ZIP_MAGIC[2] || header[3] != ZIP_MAGIC[3]) {
+                return null;
+            }
+            // 把魔数字节推回流中，继续用于后续写入
+            pushback.unread(header, 0, bytesRead);
+
             // 获取文件后缀
             String ext = FilenameUtils.getExtension(fileName);
             // 生成文件名
@@ -63,14 +71,7 @@ public class StorageUtil {
             // 转存到 tmp
             String destPath = FileUtils.getTempDirectoryPath() + File.separator + newFileName;
             destPath = destPath.replaceAll("//", "/");
-            Files.copy(inputStream, Paths.get(destPath), StandardCopyOption.REPLACE_EXISTING);
-            FileType type = FileUtil.getType(destPath);
-            // ipa和apk文件都是zip文件
-            if (type != FileType.ZIP) {
-                // 删除文件
-                FileUtils.forceDelete(new File(destPath));
-                return null;
-            }
+            Files.copy(pushback, Paths.get(destPath), StandardCopyOption.REPLACE_EXISTING);
             return destPath;
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,11 +81,6 @@ public class StorageUtil {
 
     /**
      * 存储一个文件对象
-     *
-     * @param inputStream   文件输入流
-     * @param contentLength 文件长度
-     * @param contentType   文件类型
-     * @param fileName      文件索引名
      */
     public Storage store(InputStream inputStream, long contentLength, String contentType, String fileName) {
         String key = generateKey(fileName);

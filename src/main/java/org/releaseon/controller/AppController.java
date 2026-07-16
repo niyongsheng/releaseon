@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.releaseon.domain.entity.User;
 import org.releaseon.service.AppService;
+import org.releaseon.config.SecurityUtil;
 import org.releaseon.utils.file.PathManager;
-import org.releaseon.domain.entity.Role;
 import org.releaseon.utils.response.BaseResponse;
 import org.releaseon.utils.response.ResponseUtil;
 import org.releaseon.vo.AppViewModel;
@@ -36,7 +36,7 @@ public class AppController {
             Subject currentUser = SecurityUtils.getSubject();
             User user = (User) currentUser.getPrincipal();
             List<AppViewModel> apps;
-            if (isAdmin(user)) {
+            if (SecurityUtil.isAdmin(user)) {
                 apps = this.appService.findAll(request);
             } else {
                 apps = this.appService.findByUser(user, request);
@@ -44,7 +44,7 @@ public class AppController {
             request.setAttribute("apps", apps);
             request.setAttribute("baseURL", PathManager.request(request).getBaseURL());
             request.setAttribute("token", user.getToken());
-            request.setAttribute("isAdmin", isAdmin(user));
+            request.setAttribute("isAdmin", SecurityUtil.isAdmin(user));
             request.setAttribute("username", user.getUsername());
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,15 +63,6 @@ public class AppController {
         request.setAttribute("apps", appViewModel.getPackageList());
         request.setAttribute("token", user.getToken());
         return "list";
-    }
-
-    /**
-     * 判断当前用户是否为管理员
-     */
-    private boolean isAdmin(User user) {
-        if (user.getRoleList() == null) return false;
-        return user.getRoleList().stream()
-                .anyMatch(role -> "管理员".equals(role.getName()));
     }
 
     @RequiresPermissions("/packageList/get")
@@ -104,7 +95,7 @@ public class AppController {
             if (viewModel == null) {
                 return ResponseUtil.unauthz();
             }
-            if (isAdmin(user) || viewModel.getUserId().equals(user.getId())) {
+            if (SecurityUtil.isAdmin(user) || viewModel.getUserId().equals(user.getId())) {
                 this.appService.deleteById(id);
                 return ResponseUtil.ok("删除成功");
             }

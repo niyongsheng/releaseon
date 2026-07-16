@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.releaseon.domain.entity.User;
 import org.releaseon.service.RoleService;
 import org.releaseon.service.UserService;
+import org.releaseon.config.SecurityUtil;
 import org.releaseon.utils.file.PathManager;
 import org.releaseon.utils.response.BaseResponse;
 import org.releaseon.utils.response.ResponseUtil;
@@ -36,7 +37,7 @@ public class AdminController {
     public String users(HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
         User currentUser = (User) subject.getPrincipal();
-        if (!isAdmin(currentUser)) {
+        if (!SecurityUtil.isAdmin(currentUser)) {
             return "redirect:/account/signin";
         }
 
@@ -66,7 +67,7 @@ public class AdminController {
     @PostMapping("/users/save")
     @ResponseBody
     public BaseResponse save(@RequestBody SaveUserRequest body) {
-        if (!isAdmin(getCurrentUser())) {
+        if (!SecurityUtil.isAdmin(getCurrentUser())) {
             return ResponseUtil.unauthz();
         }
 
@@ -110,7 +111,7 @@ public class AdminController {
     @ResponseBody
     public BaseResponse delete(@PathVariable("id") String id) {
         User currentUser = getCurrentUser();
-        if (!isAdmin(currentUser)) {
+        if (!SecurityUtil.isAdmin(currentUser)) {
             return ResponseUtil.unauthz();
         }
         if (currentUser.getId().equals(id)) {
@@ -127,7 +128,7 @@ public class AdminController {
     @ResponseBody
     public BaseResponse checkUsername(@RequestParam("username") String username,
                                       @RequestParam(value = "excludeId", required = false) String excludeId) {
-        if (!isAdmin(getCurrentUser())) {
+        if (!SecurityUtil.isAdmin(getCurrentUser())) {
             return ResponseUtil.unauthz();
         }
         User existing = this.userService.findByUsername(username.trim());
@@ -138,12 +139,6 @@ public class AdminController {
     }
 
     // ─── helpers ───
-
-    private boolean isAdmin(User user) {
-        if (user.getRoleList() == null) return false;
-        return user.getRoleList().stream()
-                .anyMatch(role -> "管理员".equals(role.getName()));
-    }
 
     private User getCurrentUser() {
         Subject subject = SecurityUtils.getSubject();

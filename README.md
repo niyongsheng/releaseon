@@ -1,23 +1,25 @@
-![logo](./logo.svg)
+<p align="center">
+  <img src="./logo.svg" width="160" alt="Logo">
+</p>
 
 # Releaseon
 
-移动应用分发平台。上传 `.ipa` / `.apk`，生成下载链接、二维码和钉钉通知。
+`iOS` | `Android` mobile app distribution platform. Upload `.ipa` / `.apk` packages, generate download links, QR codes, and DingTalk notifications.
 
-**技术栈**: Java 21, Spring Boot 3.3, Shiro 3.0, Thymeleaf, MySQL 8, Gradle 8.8
+**Tech Stack**: Java 21, Spring Boot 3.3, Shiro 3.0, Thymeleaf, MySQL 8, Gradle 8.8
 
-## 快速开始
+## Quick Start
 
 ```bash
-# 构建
+# Build
 ./gradlew clean build
 
-# 启动（需本地 MySQL）
+# Run (requires a local MySQL)
 java -jar build/libs/releaseon.jar
 ```
 
-访问 `http://127.0.0.1:8081/account/signin`  
-默认管理员 `admin` / `admin123456`  
+Visit `http://127.0.0.1:8081/account/signin`  
+Admin account: `admin` / `admin123456`
 
 ## Docker
 
@@ -27,10 +29,6 @@ docker build -t releaseon-app .
 docker run -d -p 8081:8081 --name releaseon releaseon-app
 ```
 
-## 部署
+## Deploy
 
-```bash
-SERVER=你的服务器IP PASS=密码 ./deploy.sh
-```
-
-详情见 [部署指南](.claude/skills/releaseon-deploy.md)。
+See [Deployment Guide](.claude/skills/releaseon-deploy.md) for details.

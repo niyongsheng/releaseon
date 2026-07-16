@@ -11,6 +11,7 @@ import org.releaseon.domain.entity.Permission;
 import org.releaseon.domain.entity.Role;
 import org.releaseon.domain.entity.User;
 import org.releaseon.utils.bcrypt.BCryptPasswordEncoder;
+import org.hibernate.Hibernate;
 import org.releaseon.utils.bcrypt.TokenManager;
 
 import jakarta.annotation.Resource;
@@ -81,10 +82,8 @@ public class UserService {
             // 禁用用户不允许登录
             if (user.getEnable() == null || !user.getEnable()) return null;
             // 级联查询
-            user.getRoleList().forEach(role -> {
-                role.getPermissionList().forEach(permission -> {
-                });
-            });
+            Hibernate.initialize(user.getRoleList());
+            user.getRoleList().forEach(role -> Hibernate.initialize(role.getPermissionList()));
         }
         return user;
     }

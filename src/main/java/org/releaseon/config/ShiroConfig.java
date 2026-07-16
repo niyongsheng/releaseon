@@ -33,23 +33,13 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-        // 不需要权限可以访问的页面
-        filterChainDefinitionMap.put("/css/**", "anon");
-        filterChainDefinitionMap.put("/js/**", "anon");
-        filterChainDefinitionMap.put("/images/**", "anon");
-        filterChainDefinitionMap.put("/account/signin", "anon");
-        filterChainDefinitionMap.put("/account/signup", "anon");
-        filterChainDefinitionMap.put("/account/login", "anon");
-        filterChainDefinitionMap.put("/account/register", "anon");
-        filterChainDefinitionMap.put("/account/logout", "anon");
-        filterChainDefinitionMap.put("/error/unauthorized", "anon");
-        filterChainDefinitionMap.put("/s/**", "anon");
-        filterChainDefinitionMap.put("/p/**", "anon");
-        filterChainDefinitionMap.put("/m/**", "anon");
-        filterChainDefinitionMap.put("/fetch/**", "anon");
-        filterChainDefinitionMap.put("/download/**", "anon");
-        filterChainDefinitionMap.put("/devices/**", "anon");
-        filterChainDefinitionMap.put("/p/code/**", "anon");
+        // 不需要权限可以访问的页面（来源：PublicPaths 常量）
+        for (String exact : PublicPaths.EXACT) {
+            filterChainDefinitionMap.put(exact, "anon");
+        }
+        for (String prefix : PublicPaths.PREFIXES) {
+            filterChainDefinitionMap.put(prefix + "**", "anon");
+        }
 
         // 需要登录才能访问的页面
         filterChainDefinitionMap.put("/upload", "authc");

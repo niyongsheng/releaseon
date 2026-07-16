@@ -2,6 +2,7 @@ package org.releaseon.service;
 
 
 import org.apache.commons.io.FileUtils;
+import org.hibernate.Hibernate;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.releaseon.domain.entity.User;
 import org.releaseon.storage.StorageUtil;
 import org.releaseon.utils.CharUtil;
 import org.releaseon.utils.file.PathManager;
+import org.releaseon.config.SecurityUtil;
 import org.releaseon.utils.image.ImageUtils;
 import org.releaseon.utils.parser.ParserClient;
 import org.releaseon.vo.AppViewModel;
@@ -49,13 +51,8 @@ public class AppService {
         user = this.userDao.findById(user.getId()).get();
         app.setOwner(user);
         app = this.appDao.save(app);
-        app.getCurrentPackage();
-        try {
-            // 触发级联查询
-            app.getWebHookList().forEach(webHook -> {
-            });
-        } catch (Exception e) {
-        }
+        Hibernate.initialize(app.getCurrentPackage());
+        Hibernate.initialize(app.getWebHookList());
         return app;
     }
 
@@ -77,18 +74,14 @@ public class AppService {
         App app = optionalApp.get();
 
         // 非属主只能由管理员查看
-        boolean isAdmin = user.getRoleList() != null
-                && user.getRoleList().stream().anyMatch(r -> "管理员".equals(r.getName()));
-        if (!app.getOwner().getId().equalsIgnoreCase(user.getId()) && !isAdmin) {
+        if (!app.getOwner().getId().equalsIgnoreCase(user.getId()) && !SecurityUtil.isAdmin(user)) {
             return null;
         }
 
+        Hibernate.initialize(app.getPackageList());
         app.getPackageList().forEach(aPackage -> {
-            try {
-                aPackage.getSourceFile().getKey();
-                aPackage.getIconFile().getKey();
-            } catch (Exception e) {
-            }
+            Hibernate.initialize(aPackage.getSourceFile());
+            Hibernate.initialize(aPackage.getIconFile());
         });
         return new AppViewModel(app, request, true);
     }
@@ -108,11 +101,8 @@ public class AppService {
             app.setShortCode(shortCode);
             app.setOwner(user);
         } else {
-            // 级联查询
-            app.getPackageList().forEach(aPackage1 -> {
-            });
-            app.getWebHookList().forEach(webHook -> {
-            });
+            Hibernate.initialize(app.getPackageList());
+            Hibernate.initialize(app.getWebHookList());
         }
         app.setName(aPackage.getName());
         app.getPackageList().add(aPackage);
@@ -198,11 +188,8 @@ public class AppService {
             user = this.userDao.findById(user.getId()).get();
             app.setOwner(user);
         } else {
-            // 级联查询
-            app.getPackageList().forEach(aPackage1 -> {
-            });
-            app.getWebHookList().forEach(webHook -> {
-            });
+            Hibernate.initialize(app.getPackageList());
+            Hibernate.initialize(app.getWebHookList());
         }
         return app;
     }

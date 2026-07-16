@@ -31,7 +31,7 @@ public class LoginRateLimitFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String path = httpRequest.getRequestURI();
 
-        if (!path.equals("/account/login") && !path.equals("/account/register")) {
+        if (!PublicPaths.isRateLimited(path)) {
             chain.doFilter(request, response);
             return;
         }

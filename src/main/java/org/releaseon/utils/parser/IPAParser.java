@@ -48,7 +48,7 @@ public class IPAParser implements PackageParser {
         File appFile = new File(appPath);
         File[] listFiles = appFile.listFiles();
         for (File file : listFiles) {
-            String pattern = iconName + "([4,6]0x[4,6]0)?(@[2,3]x)?(\\.png)?";
+            String pattern = iconName + "([46]0x[46]0)?(@[23]x)?(\\.png)?";
             boolean isMatch = Pattern.matches(pattern, file.getName());
             if (isMatch) {
                 iconNames.add(file.getName());
