@@ -1,12 +1,16 @@
 package org.releaseon.utils.ipa;
 
 import org.junit.jupiter.api.Test;
-import org.releaseon.domain.entity.*;
+import org.releaseon.domain.entity.App;
+import org.releaseon.domain.entity.Storage;
+import org.releaseon.domain.entity.Package;
 import org.releaseon.vo.PackageViewModel;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.StringWriter;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * PlistGenerator 单元测试。
@@ -43,18 +47,9 @@ class PlistGeneratorTest {
     }
 
     private static PackageViewModel createViewModel() {
-        Package pkg = new Package();
-        pkg.setId("pkg-001");
-        pkg.setName("TestApp");
-        pkg.setVersion("2.1.0");
-        pkg.setBuildVersion("210");
-        pkg.setBundleID("com.example.app");
-        pkg.setPlatform("ios");
-        pkg.setSize(10_485_760L); // 10 MB
-        pkg.setCreateTime(System.currentTimeMillis());
+        Package pkg = createBasePackage("ios");
 
         Storage icon = new Storage();
-        icon.setId("icon-001");
         icon.setKey("icons/app.png");
         pkg.setIconFile(icon);
 
@@ -63,6 +58,22 @@ class PlistGeneratorTest {
         app.setShortCode("tst");
         pkg.setApp(app);
 
-        return new PackageViewModel(pkg, () -> "example.com");
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getHeader("host")).thenReturn("releaseon.example.com");
+
+        return new PackageViewModel(pkg, request);
+    }
+
+    private static Package createBasePackage(String platform) {
+        Package pkg = new Package();
+        pkg.setId("pkg-001");
+        pkg.setName("TestApp");
+        pkg.setVersion("2.1.0");
+        pkg.setBuildVersion("210");
+        pkg.setBundleID("com.example.app");
+        pkg.setPlatform(platform);
+        pkg.setSize(10_485_760L);
+        pkg.setCreateTime(System.currentTimeMillis());
+        return pkg;
     }
 }
