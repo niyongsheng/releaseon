@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title th:text="${package.name} + ' — ReleaseOn'">应用详情 — ReleaseOn</title>
+  <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}">
+  <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
+  <link rel="apple-touch-icon" th:href="@{/images/apple-touch-icon.png}">
+  <link rel="stylesheet" th:href="@{/css/apple-tokens.css}">
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+  <link rel="stylesheet" th:href="@{/css/jquery.toast.css}">
+  <script type="text/javascript" th:src="@{/js/jquery-1.11.0.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/jquery.toast.js}"></script>
+  <script type="text/javascript" th:src="@{/js/clipboard.min.js}"></script>
+  <script th:inline="javascript">
+    /*<![CDATA[*/
+    var csrfToken = '[[${csrfToken}]]';
+    /*]]>*/
+  </script>
+  <script>
+    // 所有 AJAX 请求自动携带 CSRF token
+    $.ajaxSetup({
+      headers: { 'X-XSRF-TOKEN': csrfToken || '' }
+    });
+  </script>
+  <style>
+    /* ══════════════════════════════════════════════════════
+       Apple Design — App Detail Page (list.html)
+       ══════════════════════════════════════════════════════ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--apple-font-text);
+      color: var(--apple-ink);
+      background: var(--apple-parchment);
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+      min-height: 100vh;
+    }
+
+    /* ─── Apple Global Nav ─── */
+    .apple-global-nav {
+      display: flex;
+      align-items: center;
+      height: 44px;
+      padding: 0 24px;
+      background: var(--apple-black);
+      color: var(--apple-body-on-dark);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: -0.12px;
+      gap: 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .apple-global-nav a { color: #fff; text-decoration: none; opacity: 0.7; transition: opacity 0.15s; }
+    .apple-global-nav a:hover { opacity: 1; }
+    .apple-global-nav .spacer { flex: 1; }
+    .apple-global-nav .nav-back { opacity: 0.85; font-size: 13px; }
+    .apple-global-nav .nav-back:hover { opacity: 1; }
+    .apple-global-nav .nav-logout {
+      color: var(--apple-body-on-dark);
+      text-decoration: none;
+      font-size: 12px;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      letter-spacing: -0.12px;
+      padding: 0;
+    }
+    .apple-global-nav .nav-logout:hover {
+      opacity: 1;
+    }
+
+    /* ─── Frosted Sub-Nav ─── */
+    .apple-sub-nav {
+      display: flex;
+      align-items: center;
+      height: 56px;
+      padding: 0 24px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--apple-hairline);
+      gap: 8px;
+      position: sticky;
+      top: 44px;
+      z-index: 99;
+    }
+    .apple-sub-nav .sub-title {
+      font-family: var(--apple-font-display);
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: 0.231px;
+      color: var(--apple-ink);
+      line-height: 1.19;
+    }
+    .apple-sub-nav .sub-sep {
+      color: var(--apple-hairline);
+      font-size: 16px;
+      font-weight: 200;
+    }
+    .apple-sub-nav .sub-secondary {
+      font-size: 17px;
+      color: var(--apple-ink-muted-48);
+      letter-spacing: -0.374px;
+    }
+
+    /* ─── Content ─── */
+    .apple-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 var(--apple-space-lg) var(--apple-space-xxl);
+    }
+
+    /* ═══ Banner ═══ */
+    .detail-banner {
+      background: var(--apple-canvas);
+      padding: var(--apple-space-xxl) 0;
+      border-bottom: 1px solid var(--apple-hairline);
+    }
+    .detail-banner .banner-info {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--apple-space-lg);
+    }
+    .detail-banner .appicon-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 17.54%;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .detail-banner .appicon-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .detail-banner .banner-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .detail-banner .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--apple-space-xs);
+      align-items: center;
+    }
+    .detail-banner .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: -0.12px;
+      padding: 3px 10px;
+      border-radius: var(--apple-radius-pill);
+      background: var(--apple-parchment);
+      color: var(--apple-ink-muted-48);
+    }
+    .detail-banner .badge.short {
+      color: var(--apple-primary);
+      cursor: pointer;
+      background: rgba(0,102,204,0.08);
+    }
+    .detail-banner .badge.short:hover {
+      background: rgba(0,102,204,0.14);
+    }
+    .detail-banner .badge b {
+      font-weight: 400;
+      margin-left: 6px;
+      padding-left: 8px;
+      border-left: 1px solid var(--apple-hairline);
+    }
+    .detail-banner .banner-actions {
+      flex-shrink: 0;
+      display: flex;
+      gap: var(--apple-space-sm);
+    }
+
+    /* ═══ Tabs ═══ */
+    .detail-tabs {
+      display: flex;
+      gap: var(--apple-space-xl);
+      margin-top: var(--apple-space-xl);
+      border-bottom: 1px solid var(--apple-divider-soft);
+      padding-bottom: 0;
+    }
+    .detail-tabs a {
+      display: block;
+      padding: 0 4px var(--apple-space-sm);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.224px;
+      color: var(--apple-ink-muted-48);
+      text-decoration: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      margin-bottom: -1px;
+    }
+    .detail-tabs a:hover {
+      color: var(--apple-ink);
+    }
+    .detail-tabs a.active {
+      color: var(--apple-primary);
+      border-bottom-color: var(--apple-primary);
+    }
+
+    /* ═══ Tab Content ═══ */
+    .detail-panel {
+      padding-top: var(--apple-space-xxl);
+    }
+
+    /* ── Timeline ── */
+    .time-line {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
+    .time-line::before {
+      content: '';
+      position: absolute;
+      left: 23px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--apple-hairline);
+    }
+    .time-line li { position: relative; }
+    .time-line li:first-child {
+      padding-left: 64px;
+      margin-bottom: var(--apple-space-lg);
+    }
+    .time-line li:first-child .dot {
+      position: absolute;
+      left: 18px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--apple-primary);
+      border: 2px solid var(--apple-canvas);
+      box-shadow: 0 0 0 1px var(--apple-hairline);
+    }
+    .time-line li:first-child .filter {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.224px;
+      color: var(--apple-ink);
+    }
+    .time-line li:first-child .version-rollback { margin-left: 12px; }
+    .time-line li:nth-child(2) { margin-top: var(--apple-space-sm); }
+
+    .timeline-entry {
+      position: relative;
+      padding-left: 64px;
+      padding-bottom: var(--apple-space-xl);
+    }
+    .timeline-entry:last-child { padding-bottom: 0; }
+    .timeline-entry .tl-icon {
+      position: absolute;
+      left: 0;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--apple-parchment);
+      border: 1px solid var(--apple-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--apple-ink-muted-48);
+    }
+    .timeline-entry .tl-version {
+      font-family: var(--apple-font-display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0;
+      color: var(--apple-ink);
+      margin-bottom: 4px;
+    }
+    .timeline-entry .tl-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--apple-space-xs);
+      font-size: 13px;
+      color: var(--apple-ink-muted-48);
+      letter-spacing: -0.12px;
+      margin-bottom: var(--apple-space-xs);
+    }
+    .timeline-entry .tl-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--apple-space-xs);
+      margin-top: var(--apple-space-xs);
+    }
+    .timeline-entry .tl-actions button {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 14px;
+      border: 1px solid var(--apple-hairline);
+      background: transparent;
+      border-radius: var(--apple-radius-pill);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: -0.12px;
+      color: var(--apple-ink-muted-48);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .timeline-entry .tl-actions button:hover {
+      border-color: var(--apple-primary);
+      color: var(--apple-primary);
+    }
+    .time-line .more { text-align: center; padding: var(--apple-space-lg) 0 0 0; }
+    .time-line .more button {
+      padding: 8px 24px;
+      border: 1px solid var(--apple-hairline);
+      background: var(--apple-canvas);
+      border-radius: var(--apple-radius-pill);
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--apple-ink-muted-48);
+      transition: all 0.15s;
+    }
+    .time-line .more button:hover {
+      border-color: var(--apple-primary);
+      color: var(--apple-primary);
+    }
+
+    /* ── Info Form ── */
+    .app-info-form .field {
+      display: flex;
+      padding: var(--apple-space-lg) 0;
+      border-bottom: 1px solid var(--apple-divider-soft);
+      align-items: flex-start;
+    }
+    .app-info-form .field:last-child { border-bottom: none; }
+    .app-info-form .left-label {
+      width: 120px;
+      flex-shrink: 0;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.224px;
+      color: var(--apple-ink-muted-48);
+      padding-top: 12px;
+    }
+    .app-info-form .value {
+      flex: 1;
+      min-width: 0;
+    }
+    .app-info-form .value input {
+      width: 100%;
+      max-width: 480px;
+      padding: 10px 16px;
+      font-size: 17px;
+      letter-spacing: -0.374px;
+      border: 1px solid var(--apple-hairline);
+      border-radius: var(--apple-radius-md);
+      background: var(--apple-parchment);
+      color: var(--apple-ink);
+      font-family: var(--apple-font-text);
+    }
+    .app-info-form .value input[readonly] {
+      border-color: transparent;
+      padding-left: 0;
+      background: transparent;
+      cursor: default;
+    }
+    .app-info-form .value .appicon img {
+      border-radius: 17.54%;
+    }
+
+    /* Delete button */
+    .btn-delete-app {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 28px;
+      background: #ec4242;
+      color: #fff;
+      border: 1px solid #ec4242;
+      border-radius: var(--apple-radius-pill);
+      font-family: var(--apple-font-text);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      min-width: 120px;
+    }
+    .btn-delete-app:hover {
+      background: transparent;
+      color: #ec4242;
+    }
+    .btn-delete-app.confirm {
+      background: transparent;
+      color: #ec4242;
+    }
+    .btn-delete-app.confirm:hover {
+      background: #ec4242;
+      color: #fff;
+    }
+
+    /* ── Integration ── */
+    .integration-section h2 {
+      font-family: var(--apple-font-display);
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      color: var(--apple-ink);
+      margin-bottom: var(--apple-space-lg);
+    }
+    .integration-item {
+      display: flex;
+      gap: var(--apple-space-lg);
+      padding: var(--apple-space-xl) 0;
+      border-bottom: 1px solid var(--apple-divider-soft);
+      align-items: flex-start;
+    }
+    .integration-item:last-child { border-bottom: none; }
+    .integration-item .logo {
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .integration-item .logo img {
+      max-width: 100%;
+      max-height: 60px;
+    }
+    .integration-item .content { flex: 1; }
+    .integration-item .desc {
+      font-size: 14px;
+      color: var(--apple-ink-muted-48);
+      letter-spacing: -0.224px;
+      line-height: 1.5;
+    }
+    .configrations {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--apple-space-xs);
+      margin-top: var(--apple-space-md);
+    }
+    .config-name {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 14px;
+      border: 1px solid var(--apple-hairline);
+      border-radius: var(--apple-radius-pill);
+      font-size: 13px;
+      color: var(--apple-ink-muted-48);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .config-name:hover {
+      color: var(--apple-ink);
+      border-color: var(--apple-ink-muted-48);
+    }
+    .add-config {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--apple-hairline);
+      text-decoration: none;
+      color: var(--apple-ink-muted-48);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 16px;
+    }
+    .add-config:hover {
+      color: var(--apple-primary);
+      border-color: var(--apple-primary);
+    }
+
+    /* ── Webhook Form ── */
+    .webhook-form { margin-top: var(--apple-space-md); }
+    .webhook-form .wh-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--apple-space-sm);
+      align-items: center;
+    }
+    .webhook-form input {
+      padding: 8px 14px;
+      border: 1px solid var(--apple-hairline);
+      border-radius: var(--apple-radius-pill);
+      font-size: 14px;
+      font-family: var(--apple-font-text);
+      color: var(--apple-ink);
+      background: var(--apple-canvas);
+    }
+    .webhook-form input:focus {
+      outline: none;
+      border-color: var(--apple-primary);
+    }
+    .webhook-form .config-name { width: 160px; border-radius: var(--apple-radius-pill); }
+    .webhook-form .config-url { width: 280px; border-radius: var(--apple-radius-pill); }
+    .webhook-form .wh-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 18px;
+      border-radius: var(--apple-radius-pill);
+      border: 1px solid var(--apple-primary);
+      background: var(--apple-primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--apple-font-text);
+    }
+    .webhook-form .wh-btn:hover { background: var(--apple-primary-focus); }
+    .webhook-form .wh-btn[disabled] { opacity: 0.5; cursor: not-allowed; }
+    .webhook-form .wh-btn-outline {
+      background: transparent;
+      color: var(--apple-ink-muted-48);
+      border-color: var(--apple-hairline);
+    }
+    .webhook-form .wh-btn-outline:hover {
+      color: var(--apple-ink);
+      border-color: var(--apple-ink-muted-48);
+    }
+    .webhook-form .wh-btn-danger {
+      background: transparent;
+      color: var(--apple-ink-muted-48);
+      border-color: transparent;
+      padding: 7px 10px;
+    }
+    .webhook-form .wh-btn-danger:hover {
+      color: #ec4242;
+    }
+    .url-invalid-tips {
+      font-size: 12px;
+      margin-top: 8px;
+      color: var(--apple-primary);
+    }
+
+    /* ─── Toast ─── */
+    .jq-toast-wrap { font-family: var(--apple-font-text); }
+    .jq-toast-single { font-size: 14px; padding: 12px 20px; border-radius: var(--apple-radius-md); }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .detail-banner .banner-info { flex-direction: column; align-items: center; text-align: center; }
+      .detail-banner .badges { justify-content: center; }
+      .detail-banner .banner-actions { width: 100%; justify-content: center; margin-top: 12px; }
+      .detail-tabs { justify-content: center; }
+      .app-info-form .field { flex-direction: column; }
+      .app-info-form .left-label { width: 100%; padding-top: 0; margin-bottom: 6px; }
+      .app-info-form .value input { max-width: 100%; }
+      .integration-item { flex-direction: column; }
+      .apple-sub-nav { padding: 0 16px; }
+      .apple-content { padding-left: var(--apple-space-sm); padding-right: var(--apple-space-sm); }
+    }
+    @media (max-width: 420px) {
+      .detail-tabs { gap: var(--apple-space-md); }
+    }
+  </style>
+
+  <style>
+    /* ─── Toast Overrides ─── */
+    .jq-toast-wrap {
+      font-family: var(--apple-font-text, -apple-system, system-ui, sans-serif);
+    }
+    .jq-toast-single {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.224px;
+      line-height: 1.4;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.82) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #fff !important;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+      border: none;
+    }
+    .jq-toast-single h2 {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.224px;
+      margin-bottom: 4px;
+    }
+    .jq-toast-single.jq-icon-error { background: rgba(236, 66, 66, 0.92) !important; }
+    .jq-toast-single.jq-icon-success { background: rgba(52, 199, 89, 0.92) !important; }
+    .jq-toast-single.jq-icon-info { background: rgba(0, 102, 204, 0.92) !important; }
+
+    /* ─── Confirm Dialog ─── */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .confirm-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .confirm-dialog {
+      background: var(--apple-canvas, #fff);
+      border-radius: 14px;
+      padding: 24px 28px 20px;
+      max-width: 300px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+      transform: scale(0.92);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .confirm-overlay.active .confirm-dialog {
+      transform: scale(1);
+    }
+    .confirm-dialog .confirm-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+    .confirm-dialog .confirm-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      margin-bottom: 6px;
+      color: var(--apple-ink, #1d1d1f);
+    }
+    .confirm-dialog .confirm-msg {
+      font-size: 13px;
+      color: var(--apple-ink-muted-48, #86868b);
+      letter-spacing: -0.12px;
+      line-height: 1.4;
+      margin-bottom: 20px;
+    }
+    .confirm-dialog .confirm-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .confirm-dialog .confirm-actions button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.15s;
+      line-height: 1;
+    }
+    .confirm-dialog .confirm-actions button:active { transform: scale(0.96); }
+    .confirm-dialog .btn-cancel {
+      background: var(--apple-parchment, #f5f5f7);
+      color: var(--apple-ink, #1d1d1f);
+    }
+    .confirm-dialog .btn-confirm {
+      background: #ec4242;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ═══ Apple Global Nav ═══ -->
+<nav class="apple-global-nav">
+  <span class="nav-back"><a href="/apps">← 返回应用</a></span>
+  <span class="spacer"></span>
+  <button class="nav-logout" onclick="logout()">退出登录</button>
+</nav>
+
+<!-- ═══ Frosted Sub-Nav ═══ -->
+<div class="apple-sub-nav">
+  <a href="/apps" class="sub-title" style="text-decoration:none;color:inherit;">我的应用</a>
+  <span class="sub-sep">‹</span>
+  <span class="sub-secondary" th:text="${package.name}">App Name</span>
+</div>
+
+<!-- ═══ Banner ═══ -->
+<div class="detail-banner">
+  <div class="apple-content">
+    <div class="banner-info">
+      <div class="appicon-large">
+        <img th:src="${package.icon}" width="80" height="80" alt="icon" />
+      </div>
+      <div class="banner-meta">
+        <div class="badges">
+          <span class="badge short" id="js-app-short-copy-trigger" th:value="${package.installPath}">
+            [[${package.installPath}]]
+          </span>
+          <span class="badge" th:if="${#strings.containsIgnoreCase(package.platform,'ios')}">iOS</span>
+          <span class="badge" th:if="${#strings.containsIgnoreCase(package.platform,'android')}">Android</span>
+          <span class="badge">BundleID <b>[[${package.bundleID}]]</b></span>
+          <span class="badge" th:if="${#strings.containsIgnoreCase(package.platform,'ios')}">
+            iOS [[${package.minVersion}]] 或更高版本
+          </span>
+        </div>
+        <div class="detail-tabs">
+          <a id="app-activity-icon" class="active">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:4px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            版本记录
+          </a>
+          <a id="app-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            基本信息
+          </a>
+          <a id="app-integration-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:4px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            集成
+          </a>
+        </div>
+      </div>
+      <div class="banner-actions">
+        <a class="apple-btn-secondary-pill" th:href="${package.installPath}" target="_blank" style="font-size:14px;padding:8px 20px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          预览
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Tab Content ═══ -->
+<div class="apple-content" id="info-container">
+  <div class="detail-panel" id="info-panel">
+
+    <!-- Timeline Panel -->
+    <ul id="app-activity-panel" class="time-line"></ul>
+
+    <!-- Info Panel -->
+    <div id="app-info-panel" class="app-info-form ng-hide">
+      <div class="field">
+        <div class="left-label">应用 ID</div>
+        <div class="value">
+          <input th:value="${package.id}" readonly="readonly" />
+        </div>
+      </div>
+      <div class="field">
+        <div class="left-label">应用名称</div>
+        <div class="value">
+          <input th:value="${package.name}" readonly="readonly" />
+        </div>
+      </div>
+      <div class="field">
+        <div class="left-label">短链接</div>
+        <div class="value">
+          <input th:value="${package.installPath}" readonly="readonly" />
+        </div>
+      </div>
+      <div class="field">
+        <div class="left-label">应用图标</div>
+        <div class="value">
+          <div class="appicon" style="width:80px;cursor:pointer;">
+            <img width="80" height="80" id="icon_img" style="border-radius:17.54%;" th:src="${package.icon}" />
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="left-label">删除应用</div>
+        <div class="value">
+          <button id="delete-app" th:data="${package.id}" class="btn-delete-app require-confirm">
+            <span>删除此应用</span>
+            <span style="display:none;">确认删除?</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Integration Panel -->
+    <div id="app-integration-panel" class="integration-section ng-hide">
+      <h2>消息推送</h2>
+      <div class="integration-item">
+        <div class="logo">
+          <img alt="Dingtalk" src="/images/ding_ding.png" />
+        </div>
+        <div class="content">
+          <p class="desc">
+            钉钉，是阿里巴巴集团专为企业打造的一个专业通讯、协同办公平台，帮助企业降低沟通与管理成本，提升办公效率，让数千万企业提前进入到云和移动办公时代。
+          </p>
+          <div class="configrations">
+            <a class="add-config">+</a>
+          </div>
+          <div id="webhook-form-view" class="webhook-form ng-hide">
+            <input type="hidden" th:value="${package.id}" name="appId" id="appId" />
+            <input type="hidden" name="id" id="webHookId" />
+            <div class="wh-row">
+              <input id="ding-ding-web-hook-name" class="config-name" placeholder="配置名称" name="name" required="" />
+              <input id="ding-ding-web-hook-url" class="config-url" placeholder="Webhook URL" type="url" name="url" required="" />
+              <button class="wh-btn" onclick="add()" id="webHookAdd">添加</button>
+              <button class="wh-btn" onclick="update()" id="webHookUpdate" style="display:none;">保存</button>
+              <button class="wh-btn wh-btn-danger" onclick="remove()" id="webHookRemove" style="display:none;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              </button>
+              <button class="wh-btn wh-btn-outline" id="webHookCancel" style="display:none;">取消</button>
+            </div>
+            <p class="url-invalid-tips" style="display:none;">请输入正确的 URL 地址</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/list.js}"></script>
+<script>
+  // ── Tab active indicator ──
+  var TAB_IDS = ["#app-activity-icon", "#app-info-icon", "#app-integration-icon"];
+  TAB_IDS.forEach(function(id) {
+    $(id).click(function() {
+      TAB_IDS.forEach(function(other) { $(other).removeClass("active"); });
+      $(this).addClass("active");
+    });
+  });
+
+  // ── Logout ──
+  function logout() {
+    $.get("/account/logout", function () {
+      window.location.href = "/account/signin";
+    });
+  }
+</script>
+
+<!-- ═══ Confirm Dialog ═══ -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-dialog">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">确认删除</div>
+    <div class="confirm-msg"></div>
+    <div class="confirm-actions">
+      <button class="btn-cancel">取消</button>
+      <button class="btn-confirm">删除</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>用户管理 — ReleaseOn</title>
+  <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}">
+  <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
+  <link rel="apple-touch-icon" th:href="@{/images/apple-touch-icon.png}">
+  <link rel="stylesheet" th:href="@{/css/apple-tokens.css}">
+  <link rel="stylesheet" th:href="@{/css/jquery.toast.css}">
+  <script type="text/javascript" th:src="@{/js/jquery-1.11.0.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/jquery.toast.js}"></script>
+  <style>
+    /* ══════════════════════════════════════════════════════
+       Apple Design — Users Management Page
+       ══════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--apple-font-text);
+      color: var(--apple-ink);
+      background: var(--apple-parchment);
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+    }
+
+    /* ─── Toast overrides ─── */
+    .jq-toast-wrap { font-family: var(--apple-font-text); }
+    .jq-toast-single { font-size: 14px; padding: 12px 20px; border-radius: var(--apple-radius-md); }
+    .jq-toast-single.jq-icon-success { background: rgba(52, 199, 89, 0.92) !important; }
+    .jq-toast-single.jq-icon-error { background: rgba(236, 66, 66, 0.92) !important; }
+    .jq-toast-single.jq-icon-info { background: rgba(0, 102, 204, 0.92) !important; }
+
+    /* ─── Global Nav ─── */
+    .apple-global-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 44px;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 0;
+    }
+    .apple-global-nav .nav-logo { display: flex; align-items: center; padding: 0; }
+    .apple-global-nav .nav-logo a {
+      display: block; color: #f5f5f7; text-decoration: none;
+      font-size: 13px; font-weight: 600; letter-spacing: -0.12px;
+      padding: 8px 0; margin-right: 8px;
+    }
+    .apple-global-nav .nav-links { display: flex; align-items: center; gap: 0; }
+    .apple-global-nav .nav-links a {
+      display: block; color: #a1a1a6; text-decoration: none;
+      font-size: 12px; font-weight: 500; letter-spacing: -0.12px;
+      padding: 8px 14px; border-radius: var(--apple-radius-xs);
+      transition: color 0.15s;
+    }
+    .apple-global-nav .nav-links a:hover { color: #f5f5f7; }
+    .apple-global-nav .nav-spacer { flex: 1; }
+    .apple-global-nav .nav-token-display {
+      font-size: 11px; color: #636366; letter-spacing: -0.12px;
+      margin-right: 12px; white-space: nowrap;
+    }
+    .apple-global-nav .nav-avatar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      color: #f5f5f7;
+      font-size: 13px;
+      font-weight: 600;
+      user-select: none;
+    }
+    .apple-global-nav .nav-dropdown {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px 10px;
+      border-radius: var(--apple-radius-xs);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .apple-global-nav .nav-dropdown:hover { background: rgba(255,255,255,0.08); }
+    .apple-global-nav .nav-dropdown-icon {
+      font-size: 8px;
+      color: #636366;
+      transition: transform 0.2s;
+    }
+    .apple-global-nav .nav-dropdown.open .nav-dropdown-icon { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      min-width: 160px;
+      background: rgba(30,30,30,0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--apple-radius-md);
+      padding: 4px 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 200;
+    }
+    .nav-dropdown.open .nav-dropdown-menu { display: block; }
+    .dropdown-item {
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #e8e8ed;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s;
+    }
+    .dropdown-item:hover { background: rgba(255,255,255,0.08); }
+    .dropdown-item-danger { color: #ec4242; }
+    .dropdown-divider {
+      height: 1px;
+      margin: 4px 8px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .apple-global-nav .nav-logout {
+      background: none; border: none; color: #a1a1a6;
+      font-size: 12px; font-weight: 500; cursor: pointer;
+      padding: 8px 0; font-family: var(--apple-font-text);
+      transition: color 0.15s;
+    }
+    .apple-global-nav .nav-logout:hover { color: #f5f5f7; }
+
+    /* ─── Sub Nav ─── */
+    .apple-sub-nav {
+      position: fixed; top: 44px; left: 0; right: 0; z-index: 99;
+      height: 52px;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--apple-hairline);
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      gap: 12px;
+    }
+    .apple-sub-nav .sub-title {
+      font-family: var(--apple-font-display);
+      font-size: 21px; font-weight: 600; letter-spacing: -0.374px;
+      color: var(--apple-ink);
+    }
+    .apple-sub-nav .nav-spacer { flex: 1; }
+
+    /* ─── Main Content ─── */
+    .apple-content {
+      max-width: 1100px;
+      margin: 96px auto 40px;
+      padding: 0 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: var(--apple-space-md);
+    }
+    .section-header h2 {
+      font-family: var(--apple-font-display);
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      color: var(--apple-ink);
+    }
+    .section-header .count {
+      font-size: 14px;
+      color: var(--apple-ink-muted-48);
+    }
+
+    /* ─── Apple-style Table ─── */
+    .apple-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--apple-canvas);
+      border: 1px solid var(--apple-hairline);
+      border-radius: var(--apple-radius-lg);
+      overflow: hidden;
+    }
+    .apple-table thead { background: var(--apple-parchment); }
+    .apple-table th {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--apple-ink-muted-48);
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--apple-hairline);
+    }
+    .apple-table td {
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.224px;
+      color: var(--apple-ink);
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--apple-divider-soft);
+      vertical-align: middle;
+    }
+    .apple-table tbody tr:last-child td { border-bottom: none; }
+    .apple-table tbody tr { transition: background 0.15s; }
+    .apple-table tbody tr:hover td { background: rgba(0,0,0,0.02); }
+    .apple-table .cell-username { font-weight: 500; }
+    .apple-table .cell-time {
+      font-size: 13px;
+      color: var(--apple-ink-muted-48);
+      white-space: nowrap;
+    }
+    .apple-table .cell-actions { white-space: nowrap; text-align: right; }
+
+    /* ─── Status Badges ─── */
+    .status-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: var(--apple-radius-pill);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: -0.12px;
+    }
+    .status-badge.active { background: rgba(52,199,89,0.12); color: #34c759; }
+    .status-badge.inactive { background: rgba(236,66,66,0.1); color: #ec4242; }
+
+    /* ─── Role Tags ─── */
+    .role-tag {
+      display: inline-block;
+      padding: 2px 10px;
+      margin: 1px 2px;
+      border-radius: var(--apple-radius-pill);
+      font-size: 12px;
+      font-weight: 500;
+      background: var(--apple-parchment);
+      color: var(--apple-ink-muted-48);
+    }
+
+    /* ─── Table Action Buttons ─── */
+    .table-action-btn {
+      display: inline-block;
+      background: none; border: none;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: -0.12px;
+      color: var(--apple-primary);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: var(--apple-radius-sm);
+      font-family: var(--apple-font-text);
+      transition: background 0.15s;
+    }
+    .table-action-btn:hover { background: rgba(0,102,204,0.06); }
+    .table-action-btn.table-action-delete { color: #ec4242; }
+    .table-action-btn.table-action-delete:hover { background: rgba(236,66,66,0.06); }
+
+    /* ─── Primary Button (sub-nav) ─── */
+    .apple-btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--apple-primary);
+      color: #fff;
+      border: none;
+      padding: 8px 20px;
+      border-radius: var(--apple-radius-pill);
+      font-family: var(--apple-font-text);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+    .apple-btn-primary:hover { background: var(--apple-primary-focus); }
+    .apple-btn-primary:active { transform: scale(0.97); }
+
+    /* ─── Modal ─── */
+    .modal-overlay {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 200;
+      background: rgba(0,0,0,0.3);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-dialog {
+      background: var(--apple-canvas);
+      border-radius: var(--apple-radius-lg);
+      padding: var(--apple-space-xl);
+      max-width: 440px;
+      width: 90%;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.16);
+    }
+    .modal-title {
+      font-family: var(--apple-font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      margin-bottom: var(--apple-space-lg);
+    }
+    .modal-field {
+      margin-bottom: var(--apple-space-md);
+    }
+    .modal-field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--apple-ink-muted-48);
+      margin-bottom: 6px;
+      letter-spacing: -0.12px;
+    }
+    .modal-field input[type="text"],
+    .modal-field input[type="password"],
+    .modal-field select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--apple-hairline);
+      border-radius: var(--apple-radius-md);
+      font-family: var(--apple-font-text);
+      font-size: 15px;
+      letter-spacing: -0.224px;
+      color: var(--apple-ink);
+      background: var(--apple-canvas);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .modal-field input[type="text"]:focus,
+    .modal-field input[type="password"]:focus,
+    .modal-field select:focus {
+      border-color: var(--apple-primary);
+      box-shadow: 0 0 0 3px rgba(0,102,204,0.12);
+    }
+    .modal-field .field-hint {
+      display: block;
+      font-size: 12px;
+      color: var(--apple-ink-muted-48);
+      margin-top: 4px;
+      letter-spacing: -0.12px;
+    }
+    .modal-field .field-error {
+      display: none;
+      font-size: 12px;
+      color: #ec4242;
+      margin-top: 4px;
+      letter-spacing: -0.12px;
+    }
+    .modal-field .field-error.show { display: block; }
+
+    /* ─── Checkbox field ─── */
+    .checkbox-label {
+      display: flex !important;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500 !important;
+      color: var(--apple-ink) !important;
+      cursor: pointer;
+    }
+    .checkbox-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--apple-primary);
+    }
+
+    /* ─── Modal Actions ─── */
+    .modal-actions {
+      display: flex;
+      gap: var(--apple-space-sm);
+      margin-top: var(--apple-space-lg);
+    }
+    .modal-actions button {
+      flex: 1;
+      padding: 12px 24px;
+      border-radius: var(--apple-radius-pill);
+      font-family: var(--apple-font-text);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.224px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s;
+      line-height: 1;
+    }
+    .modal-actions .btn-cancel {
+      background: var(--apple-parchment);
+      color: var(--apple-ink);
+    }
+    .modal-actions .btn-cancel:hover { background: #e8e8ed; }
+    .modal-actions .btn-save {
+      background: var(--apple-primary);
+      color: #fff;
+    }
+    .modal-actions .btn-save:hover { background: var(--apple-primary-focus); }
+    .modal-actions button:active { transform: scale(0.97); }
+
+    /* ─── Confirm Dialog ─── */
+    .confirm-overlay {
+      display: none;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 300;
+      background: rgba(0,0,0,0.3);
+      align-items: center;
+      justify-content: center;
+    }
+    .confirm-overlay.active { display: flex; }
+    .confirm-dialog {
+      background: var(--apple-canvas);
+      border-radius: var(--apple-radius-lg);
+      padding: var(--apple-space-xl);
+      max-width: 360px;
+      width: 85%;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.16);
+    }
+    .confirm-dialog .confirm-icon {
+      font-size: 40px;
+      margin-bottom: var(--apple-space-sm);
+    }
+    .confirm-dialog .confirm-title {
+      font-family: var(--apple-font-display);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.374px;
+      margin-bottom: var(--apple-space-xs);
+    }
+    .confirm-dialog .confirm-msg {
+      font-size: 14px;
+      color: var(--apple-ink-muted-48);
+      letter-spacing: -0.224px;
+      margin-bottom: var(--apple-space-lg);
+    }
+    .confirm-dialog .confirm-actions {
+      display: flex;
+      gap: var(--apple-space-sm);
+    }
+    .confirm-dialog .confirm-actions button {
+      flex: 1;
+      padding: 10px 20px;
+      border-radius: var(--apple-radius-pill);
+      border: none;
+      font-family: var(--apple-font-text);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .confirm-dialog .confirm-actions button:active { transform: scale(0.97); }
+    .confirm-dialog .confirm-actions .btn-cancel { background: var(--apple-parchment); color: var(--apple-ink); }
+    .confirm-dialog .confirm-actions .btn-cancel:hover { background: #e8e8ed; }
+    .confirm-dialog .confirm-actions .btn-confirm { background: #ec4242; color: #fff; }
+    .confirm-dialog .confirm-actions .btn-confirm:hover { background: #d63131; }
+
+    /* ─── Empty State ─── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--apple-ink-muted-48);
+      font-size: 15px;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      .apple-content { padding: 0 16px; }
+      .apple-table .cell-time { display: none; }
+      .apple-global-nav { padding: 0 16px; }
+      .apple-sub-nav { padding: 0 16px; }
+      .apple-global-nav .nav-token-display,
+      .apple-global-nav .nav-dropdown-icon { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ Apple Global Nav ═══ -->
+<nav class="apple-global-nav">
+  <span class="nav-logo"><a href="/apps">
+    <svg width="18" height="18" viewBox="0 0 1024 1024" fill="currentColor" style="display:block;">
+      <path d="M510.165333 233.685333l21.930667-36.650666c12.8-23.808 42.069333-31.146667 65.834667-18.304 23.765333 12.8 31.104 42.112 18.304 65.92l-208.469334 357.077333h149.930667c47.573333 0 75.008 56.746667 54.869333 97.024H175.530667A47.232 47.232 0 0 1 128 651.178667c0-27.477333 21.930667-47.616 47.530667-47.616h122.538666l157.226667-274.688-49.365333-86.058667c-12.8-23.808-5.461333-53.077333 18.304-65.92 23.765333-12.8 53.034667-5.461333 65.834666 18.346667l20.096 38.4z m-186.496 514.56l-45.738666 80.554667c-12.8 23.765333-42.026667 31.146667-65.834667 18.304-23.765333-12.8-31.061333-42.112-18.261333-65.92l34.730666-60.458667c38.4-12.8 71.338667-3.626667 95.104 27.477334z m398.634667-146.517333h126.165333c27.434667 0 47.530667 21.973333 47.530667 47.616 0 27.434667-21.930667 47.616-47.530667 47.616h-69.504l47.530667 82.346667c12.8 23.850667 5.504 53.12-18.261333 65.962666-23.765333 12.8-53.034667 5.504-65.834667-18.346666-78.634667-137.301333-138.965333-239.829333-177.365333-309.418667-40.234667-69.589333-10.965333-139.178667 16.469333-162.986667 31.061333 56.746667 78.592 139.178667 140.8 247.210667z"/>
+    </svg>
+  </a></span>
+  <div class="nav-links">
+    <a href="/apps">ReleaseOn</a>
+  </div>
+  <span class="nav-spacer"></span>
+  <span class="nav-token-display" th:text="'Token: ' + ${token}" th:unless="${#strings.isEmpty(token)}"></span>
+  <div class="nav-dropdown" onclick="toggleDropdown(event)">
+    <span class="nav-avatar" th:title="${username}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </span>
+    <span class="nav-dropdown-icon">▾</span>
+    <div class="nav-dropdown-menu" id="navDropdownMenu">
+      <div class="dropdown-item dropdown-username" th:text="${username}">admin</div>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item" onclick="event.stopPropagation();copyToken()">复制 Token</div>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item dropdown-item-danger" onclick="event.stopPropagation();logout()">退出登录</div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ Frosted Sub-Nav ═══ -->
+<div class="apple-sub-nav">
+  <span class="sub-title">用户管理</span>
+  <span class="nav-spacer"></span>
+  <button class="apple-btn-primary" onclick="openCreateModal()">创建用户</button>
+</div>
+
+<!-- ═══ Main Content ═══ -->
+<main class="apple-content">
+  <div class="section-header" th:if="${not #lists.isEmpty(users)}">
+    <h2>全部用户</h2>
+    <span class="count" th:text="${#lists.size(users)} + ' 个用户'"></span>
+  </div>
+
+  <!-- Users Table -->
+  <table class="apple-table" th:if="${not #lists.isEmpty(users)}">
+    <thead>
+      <tr>
+        <th>用户名</th>
+        <th>角色</th>
+        <th>状态</th>
+        <th>创建时间</th>
+        <th>最后登录</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="user : ${users}">
+        <td class="cell-username" th:text="${user.username}">admin</td>
+        <td>
+          <span th:each="role : ${user.roleList}" class="role-tag" th:text="${role.name}">管理员</span>
+        </td>
+        <td>
+          <span class="status-badge" th:classappend="${user.enable} ? 'active' : 'inactive'"
+                th:text="${user.enable} ? '启用' : '禁用'">启用</span>
+        </td>
+        <td class="cell-time" th:text="${createDates.get(user.id)}">-</td>
+        <td class="cell-time" th:text="${loginDates.get(user.id)}">-</td>
+        <td class="cell-actions">
+          <button class="table-action-btn" th:attr="data-id=${user.id},data-username=${user.username},data-enabled=${user.enable},data-role-id=${user.roleList.iterator().next().id}"
+                  onclick="openEditModal(this)">编辑</button>
+          <button class="table-action-btn table-action-delete" th:attr="data-id=${user.id},data-username=${user.username}"
+                  onclick="deleteUser(this)">删除</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Empty state -->
+  <div th:if="${#lists.isEmpty(users)}" class="empty-state">
+    <p>暂无用户</p>
+  </div>
+</main>
+
+<!-- ═══ Create/Edit Modal ═══ -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal-dialog">
+    <div class="modal-title" id="modalTitle">创建用户</div>
+    <form id="userForm">
+      <input type="hidden" name="id" id="userId" value="">
+      <div class="modal-field">
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" required placeholder="输入用户名" />
+        <span class="field-error" id="usernameError">用户名已被使用</span>
+      </div>
+      <div class="modal-field">
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password" placeholder="编辑时留空则不修改" />
+        <span class="field-hint" id="passwordHint">编辑用户时留空表示不修改密码</span>
+      </div>
+      <div class="modal-field">
+        <label for="roleId">角色</label>
+        <select id="roleId" name="roleId" required>
+          <option value="">选择角色</option>
+          <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label class="checkbox-label">
+          <input type="checkbox" id="enabled" name="enabled" checked />
+          启用
+        </label>
+      </div>
+    </form>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-save" onclick="saveUser()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Confirm Delete Dialog ═══ -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-dialog">
+    <div class="confirm-icon">⚠️</div>
+    <div class="confirm-title">确认删除</div>
+    <div class="confirm-msg"></div>
+    <div class="confirm-actions">
+      <button class="btn-cancel">取消</button>
+      <button class="btn-confirm">删除</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ═══════════════════════════════════════════════════════
+     CSRF Token
+     ═══════════════════════════════════════════════════════ */
+  var csrfToken = '[[${csrfToken}]]';
+  $.ajaxSetup({
+    headers: { 'X-XSRF-TOKEN': csrfToken || '' }
+  });
+
+  $.toast.options.heading = '';
+  $.toast.options.position = 'bottom-center';
+  $.toast.options.hideAfter = 3000;
+
+  /* ═══════════════════════════════════════════════════════
+     Modal
+     ═══════════════════════════════════════════════════════ */
+  function openCreateModal() {
+    document.getElementById('modalTitle').textContent = '创建用户';
+    document.getElementById('userId').value = '';
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('password').required = true;
+    document.getElementById('passwordHint').textContent = '';
+    document.getElementById('roleId').value = '';
+    document.getElementById('enabled').checked = true;
+    document.getElementById('usernameError').classList.remove('show');
+    document.getElementById('userModal').classList.add('active');
+  }
+
+  function openEditModal(btn) {
+    document.getElementById('modalTitle').textContent = '编辑用户';
+    document.getElementById('userId').value = btn.getAttribute('data-id');
+    document.getElementById('username').value = btn.getAttribute('data-username');
+    document.getElementById('password').value = '';
+    document.getElementById('password').required = false;
+    document.getElementById('passwordHint').textContent = '留空则不修改密码';
+    document.getElementById('roleId').value = btn.getAttribute('data-role-id');
+    document.getElementById('enabled').checked = btn.getAttribute('data-enabled') === 'true';
+    document.getElementById('usernameError').classList.remove('show');
+    document.getElementById('userModal').classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('userModal').classList.remove('active');
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     Save User
+     ═══════════════════════════════════════════════════════ */
+  function saveUser() {
+    var id = document.getElementById('userId').value;
+    var username = document.getElementById('username').value.trim();
+    var password = document.getElementById('password').value;
+    var roleId = document.getElementById('roleId').value;
+    var enabled = document.getElementById('enabled').checked;
+
+    if (!username) {
+      showError('请输入用户名');
+      return;
+    }
+    if (!id && !password) {
+      showError('请输入密码');
+      return;
+    }
+    if (!roleId) {
+      showError('请选择角色');
+      return;
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: '/admin/users/save',
+      contentType: 'application/json;charset=UTF-8',
+      data: JSON.stringify({
+        id: id || null,
+        username: username,
+        password: password || null,
+        roleId: roleId,
+        enabled: enabled
+      }),
+      success: function (res) {
+        if (res.code === 0) {
+          $.toast({ text: id ? '更新成功' : '创建成功', icon: 'success' });
+          closeModal();
+          setTimeout(function () { location.reload(); }, 800);
+        } else {
+          showError(res.msg || '操作失败');
+        }
+      },
+      error: function () {
+        showError('网络错误');
+      }
+    });
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     Delete User
+     ═══════════════════════════════════════════════════════ */
+  function deleteUser(btn) {
+    var id = btn.getAttribute('data-id');
+    var username = btn.getAttribute('data-username');
+    var overlay = document.getElementById('confirmOverlay');
+    overlay.querySelector('.confirm-msg').textContent = '确认删除用户「' + username + '」吗？此操作不可撤销。';
+    overlay.classList.add('active');
+    overlay.querySelector('.btn-confirm').onclick = function () {
+      overlay.classList.remove('active');
+      $.ajax({
+        type: 'POST',
+        url: '/admin/users/delete/' + id,
+        success: function (res) {
+          if (res.code === 0) {
+            $.toast({ text: '删除成功', icon: 'success' });
+            location.reload();
+          } else {
+            $.toast({ text: res.msg || '删除失败', icon: 'error' });
+          }
+        },
+        error: function () {
+          $.toast({ text: '网络错误', icon: 'error' });
+        }
+      });
+    };
+    overlay.querySelector('.btn-cancel').onclick = function () {
+      overlay.classList.remove('active');
+    };
+  }
+
+  /* ═══════════════════════════════════════════════════════
+     Helpers
+     ═══════════════════════════════════════════════════════ */
+  function showError(msg) {
+    var el = document.getElementById('usernameError');
+    if (!el) { alert(msg); return; }
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(function () {
+      if (el) el.classList.remove('show');
+    }, 3000);
+  }
+
+  /* ─── Nav Dropdown ─── */
+  function toggleDropdown(e) {
+    if (e) e.stopPropagation();
+    var el = document.querySelector('.nav-dropdown');
+    if (el) el.classList.toggle('open');
+  }
+  document.addEventListener('click', function () {
+    var el = document.querySelector('.nav-dropdown');
+    if (el) el.classList.remove('open');
+  });
+
+  function copyToken() {
+    var token = '[[${token}]]';
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(token).then(function () {
+        $.toast({ text: 'Token 已复制', icon: 'info' });
+      }).catch(function () {
+        $.toast({ text: '复制失败', icon: 'error' });
+      });
+    } else {
+      $.toast({ text: 'Token: ' + token, icon: 'info' });
+    }
+  }
+
+  function logout() {
+    $.get("/account/logout", function () {
+      window.location.href = "/account/signin";
+    });
+  }
+</script>
+</body>
+</html>

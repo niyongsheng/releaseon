@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>错误 — ReleaseOn</title>
+  <link rel="icon" type="image/svg+xml" th:href="@{/images/favicon.svg}">
+  <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
+  <link rel="apple-touch-icon" th:href="@{/images/apple-touch-icon.png}">
+  <link rel="stylesheet" th:href="@{/css/apple-tokens.css}">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--apple-font-text);
+      color: var(--apple-ink);
+      background: var(--apple-parchment);
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .error-card {
+      text-align: center;
+      max-width: 440px;
+      width: 100%;
+      background: var(--apple-canvas);
+      border: 1px solid var(--apple-hairline);
+      border-radius: var(--apple-radius-lg);
+      padding: 64px 32px;
+    }
+
+    .error-card .error-icon {
+      margin-bottom: var(--apple-space-md);
+    }
+
+    .error-card h1 {
+      font-family: var(--apple-font-display);
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.14;
+      letter-spacing: 0;
+      color: var(--apple-ink);
+      margin: 0 0 var(--apple-space-sm);
+    }
+
+    .error-card p {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.47;
+      letter-spacing: -0.374px;
+      color: var(--apple-ink-muted-48);
+      margin: 0 0 var(--apple-space-xl);
+    }
+
+    .error-card .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 28px;
+      background: var(--apple-primary);
+      color: #fff;
+      border-radius: var(--apple-radius-pill);
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 500;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .error-card .back-link:hover { background: var(--apple-primary-focus); }
+    .error-card .back-link:active { transform: scale(0.95); }
+
+    @media (max-width: 480px) {
+      .error-card { padding: 48px 24px; }
+      .error-card h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="error-card">
+  <div class="error-icon">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--apple-ink-muted-48);"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  </div>
+  <h1>无权限访问</h1>
+  <p>你没有足够的权限查看此页面，请联系管理员。</p>
+  <a href="/apps" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    返回首页
+  </a>
+</div>
+
+</body>
+</html>

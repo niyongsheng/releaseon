@@ -1,0 +1,51 @@
+plugins {
+    id 'org.springframework.boot' version '3.5.16'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+}
+
+group = 'org.releaseon'
+version = '1.0.0'
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+bootJar {
+    archiveFileName = "releaseon.jar"
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation (group: 'org.apache.shiro', name: 'shiro-spring-boot-web-starter', version: '3.0.0') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-log4j2'
+    }
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.22.1'
+    implementation group: 'com.aliyun.oss', name: 'aliyun-sdk-oss', version: '3.18.5'
+    implementation group: 'com.qiniu', name: 'qiniu-java-sdk', version: '7.17.0'
+    implementation group: 'com.qcloud', name: 'cos_api', version: '5.6.199'
+    implementation group: 'com.mysql', name: 'mysql-connector-j', version: '9.7.0'
+    implementation group: 'com.googlecode.plist', name: 'dd-plist', version: '1.29'
+    implementation group: 'net.dongliu', name: 'apk-parser', version: '2.6.10'
+    implementation group: 'com.google.zxing', name: 'javase', version: '3.5.4'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.22.0'
+    implementation group: 'com.jcraft', name: 'jzlib', version: '1.1.3'
+    implementation group: 'org.freemarker', name: 'freemarker', version: '2.3.34'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.12.0'
+    implementation group: 'com.alibaba', name: 'fastjson', version: '2.0.62'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

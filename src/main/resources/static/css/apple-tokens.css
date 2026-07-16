@@ -1,0 +1,387 @@
+/* ══════════════════════════════════════════════════════
+   Apple Design Tokens — Pico CSS Overrides
+   Source: doc/design_token.html (from Apple DESIGN.md)
+   ══════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── Brand & Accent ─── */
+  --apple-primary: #0066cc;
+  --apple-primary-focus: #0071e3;
+  --apple-primary-on-dark: #2997ff;
+
+  /* ─── Surfaces ─── */
+  --apple-canvas: #ffffff;
+  --apple-parchment: #f5f5f7;
+  --apple-pearl: #fafafc;
+  --apple-tile-1: #272729;
+  --apple-tile-2: #2a2a2c;
+  --apple-tile-3: #252527;
+  --apple-black: #000000;
+  --apple-chip-translucent: #d2d2d7;
+
+  /* ─── Text ─── */
+  --apple-ink: #1d1d1f;
+  --apple-body: #1d1d1f;
+  --apple-body-on-dark: #ffffff;
+  --apple-body-muted: #cccccc;
+  --apple-ink-muted-80: #333333;
+  --apple-ink-muted-48: #7a7a7a;
+
+  /* ─── Hairlines ─── */
+  --apple-divider-soft: #f0f0f0;
+  --apple-hairline: #e0e0e0;
+
+  /* ─── Typography ─── */
+  --apple-font-display: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+  --apple-font-text: 'SF Pro Text', 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* ─── Spacing ─── */
+  --apple-space-xxs: 4px;
+  --apple-space-xs: 8px;
+  --apple-space-sm: 12px;
+  --apple-space-md: 17px;
+  --apple-space-lg: 24px;
+  --apple-space-xl: 32px;
+  --apple-space-xxl: 48px;
+  --apple-space-section: 80px;
+
+  /* ─── Radii ─── */
+  --apple-radius-none: 0;
+  --apple-radius-xs: 5px;
+  --apple-radius-sm: 8px;
+  --apple-radius-md: 11px;
+  --apple-radius-lg: 18px;
+  --apple-radius-pill: 9999px;
+
+  /* ─── Shadows ─── */
+  --apple-shadow-product: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+}
+
+/* ─── Pico CSS Variable Overrides ─── */
+:root {
+  --pico-primary: var(--apple-primary);
+  --pico-primary-hover: var(--apple-primary-focus);
+  --pico-primary-focus: var(--apple-primary-focus);
+  --pico-primary-inverse: #ffffff;
+  --pico-text-color: var(--apple-ink);
+  --pico-text-selection-color: rgba(0, 102, 204, 0.2);
+  --pico-font-family: var(--apple-font-text);
+  --pico-font-family-monospace: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  --pico-line-height: 1.47;
+  --pico-border-radius: var(--apple-radius-md);
+  --pico-background-color: var(--apple-canvas);
+  --pico-card-background-color: var(--apple-canvas);
+  --pico-card-border-color: var(--apple-hairline);
+  --pico-card-sectioning-background-color: var(--apple-parchment);
+  --pico-form-element-background-color: var(--apple-canvas);
+  --pico-form-element-border-color: var(--apple-hairline);
+  --pico-form-element-color: var(--apple-ink);
+  --pico-form-element-placeholder-color: var(--apple-ink-muted-48);
+  --pico-del-color: var(--apple-ink-muted-48);
+  --pico-ins-color: var(--apple-primary);
+  --pico-muted-color: var(--apple-ink-muted-48);
+  --pico-heading-color: var(--apple-ink);
+  --pico-h1-color: var(--apple-ink);
+  --pico-h2-color: var(--apple-ink);
+  --pico-h3-color: var(--apple-ink);
+  --pico-h4-color: var(--apple-ink);
+  --pico-h5-color: var(--apple-ink);
+  --pico-h6-color: var(--apple-ink);
+  --pico-mark-background-color: var(--apple-parchment);
+  --pico-table-border-color: var(--apple-hairline);
+  --pico-nav-element-color: var(--apple-ink-muted-48);
+  --pico-nav-link-color: var(--apple-ink);
+  --pico-tooltip-background-color: var(--apple-ink);
+  --pico-tooltip-color: var(--apple-body-on-dark);
+}
+
+/* ─── Apple Typography Utilities ─── */
+.apple-hero-display {
+  font-family: var(--apple-font-display);
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1.07;
+  letter-spacing: -0.28px;
+}
+
+.apple-display-lg {
+  font-family: var(--apple-font-display);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.apple-display-md {
+  font-family: var(--apple-font-text);
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
+}
+
+.apple-lead {
+  font-family: var(--apple-font-display);
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: 0.196px;
+}
+
+.apple-tagline {
+  font-family: var(--apple-font-display);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.19;
+  letter-spacing: 0.231px;
+}
+
+.apple-body {
+  font-family: var(--apple-font-text);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.47;
+  letter-spacing: -0.374px;
+}
+
+.apple-caption {
+  font-family: var(--apple-font-text);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.43;
+  letter-spacing: -0.224px;
+}
+
+.apple-fine-print {
+  font-family: var(--apple-font-text);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: -0.12px;
+}
+
+/* ─── Apple Button Components ─── */
+.apple-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--apple-primary);
+  color: #ffffff;
+  font-family: var(--apple-font-text);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.374px;
+  padding: 11px 22px;
+  border: none;
+  border-radius: var(--apple-radius-pill);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+  white-space: nowrap;
+}
+.apple-btn-primary:hover {
+  background: var(--apple-primary-focus);
+  color: #ffffff;
+}
+.apple-btn-primary:active {
+  transform: scale(0.95);
+}
+.apple-btn-primary:focus-visible {
+  outline: 2px solid var(--apple-primary-focus);
+  outline-offset: 2px;
+}
+
+.apple-btn-secondary-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--apple-primary);
+  font-family: var(--apple-font-text);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.374px;
+  padding: 11px 22px;
+  border: 1px solid var(--apple-primary);
+  border-radius: var(--apple-radius-pill);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease;
+  white-space: nowrap;
+}
+.apple-btn-secondary-pill:active {
+  transform: scale(0.95);
+}
+
+.apple-btn-dark-utility {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--apple-ink);
+  color: var(--apple-body-on-dark);
+  font-family: var(--apple-font-text);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.29;
+  letter-spacing: -0.224px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: var(--apple-radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+.apple-btn-dark-utility:active {
+  transform: scale(0.95);
+}
+
+/* ─── Apple Link Styles ─── */
+.apple-text-link {
+  color: var(--apple-primary);
+  font-family: var(--apple-font-text);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.374px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.apple-text-link:hover {
+  color: var(--apple-primary-focus);
+}
+
+/* ─── Apple Nav Bar (reusable) ─── */
+.apple-global-nav {
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 20px;
+  background: var(--apple-black);
+  color: var(--apple-body-on-dark);
+  font-family: var(--apple-font-text);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.12px;
+  line-height: 1;
+  gap: 20px;
+}
+.apple-global-nav a {
+  color: var(--apple-body-on-dark);
+  text-decoration: none;
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+.apple-global-nav a:hover {
+  opacity: 1;
+}
+.apple-global-nav .spacer {
+  flex: 1;
+}
+
+.apple-sub-nav {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  padding: 0 20px;
+  background: rgba(245, 245, 247, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  gap: 16px;
+}
+.apple-sub-nav .sub-nav-category {
+  font-family: var(--apple-font-display);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.19;
+  letter-spacing: 0.231px;
+  color: var(--apple-ink);
+}
+.apple-sub-nav .sub-nav-link {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.224px;
+  line-height: 1.29;
+  color: var(--apple-ink-muted-48);
+  text-decoration: none;
+}
+.apple-sub-nav .sub-nav-link:hover {
+  color: var(--apple-ink);
+}
+.apple-sub-nav .spacer {
+  flex: 1;
+}
+
+/* ─── Utility Classes ─── */
+.apple-text-center {
+  text-align: center;
+}
+.apple-text-muted {
+  color: var(--apple-ink-muted-48);
+}
+.apple-bg-parchment {
+  background: var(--apple-parchment);
+}
+
+/* ─── Card Component ─── */
+.apple-card {
+  background: var(--apple-canvas);
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-lg);
+  padding: var(--apple-space-lg);
+  transition: transform 0.2s ease;
+}
+.apple-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ─── Product Tile ─── */
+.apple-tile-light {
+  background: var(--apple-canvas);
+  color: var(--apple-ink);
+  padding: var(--apple-space-section) var(--apple-space-lg);
+  text-align: center;
+}
+.apple-tile-parchment {
+  background: var(--apple-parchment);
+  color: var(--apple-ink);
+  padding: var(--apple-space-section) var(--apple-space-lg);
+  text-align: center;
+}
+.apple-tile-dark {
+  background: var(--apple-tile-1);
+  color: var(--apple-body-on-dark);
+  padding: var(--apple-space-section) var(--apple-space-lg);
+  text-align: center;
+}
+
+/* ─── Grid: Apple-style app card grid ─── */
+.apple-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--apple-space-lg);
+}
+
+/* ─── Responsive helpers ─── */
+@media (max-width: 640px) {
+  .apple-hero-display {
+    font-size: 34px;
+  }
+  .apple-display-lg {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .apple-hero-display {
+    font-size: 28px;
+  }
+  .apple-grid {
+    grid-template-columns: 1fr;
+  }
+}

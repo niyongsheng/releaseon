@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: releaseon-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+    volumes:
+      - /home/releaseon/mysql/data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "127.0.0.1:3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: releaseon-app
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_DOMAIN: ${SERVER_DOMAIN:-releaseon.nicolab.top}
+      # Cloudflare Tunnel 提供 HTTPS，存储地址使用 https
+      STORAGE_LOCAL_ADDRESS: ${STORAGE_LOCAL_ADDRESS:-https://releaseon.nicolab.top/fetch/}
+    volumes:
+      - /home/releaseon/storage:/app/storage
+    ports:
+      - "8081:8081"

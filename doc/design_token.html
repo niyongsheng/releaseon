@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apple Design Tokens 参考手册</title>
+<style>
+  /* ─── Reset & Base ─── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Apple design tokens from DESIGN.md */
+    --primary: #0066cc;
+    --primary-focus: #0071e3;
+    --primary-on-dark: #2997ff;
+    --ink: #1d1d1f;
+    --body: #1d1d1f;
+    --body-on-dark: #ffffff;
+    --body-muted: #cccccc;
+    --ink-muted-80: #333333;
+    --ink-muted-48: #7a7a7a;
+    --divider-soft: #f0f0f0;
+    --hairline: #e0e0e0;
+    --canvas: #ffffff;
+    --canvas-parchment: #f5f5f7;
+    --surface-pearl: #fafafc;
+    --surface-tile-1: #272729;
+    --surface-tile-2: #2a2a2c;
+    --surface-tile-3: #252527;
+    --surface-black: #000000;
+    --surface-chip-translucent: #d2d2d7;
+    --on-primary: #ffffff;
+    --on-dark: #ffffff;
+
+    /* Typography tokens mapped */
+    --font-display: 'SF Pro Display', 'Inter', system-ui, -apple-system, sans-serif;
+    --font-text: 'SF Pro Text', 'Inter', system-ui, -apple-system, sans-serif;
+
+    /* Spacing */
+    --space-section: 80px;
+    --space-xxl: 48px;
+    --space-xl: 32px;
+    --space-lg: 24px;
+    --space-md: 17px;
+    --space-sm: 12px;
+    --space-xs: 8px;
+    --space-xxs: 4px;
+
+    /* Radii */
+    --radius-pill: 9999px;
+    --radius-lg: 18px;
+    --radius-md: 11px;
+    --radius-sm: 8px;
+    --radius-xs: 5px;
+
+    /* Shadow */
+    --product-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0;
+  }
+
+  html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+  body {
+    font-family: var(--font-text);
+    color: var(--ink);
+    background: var(--canvas);
+    line-height: 1.47;
+    letter-spacing: -0.374px;
+  }
+
+  /* ─── Layout ─── */
+  .app-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+  }
+
+  /* ─── Hero ─── */
+  .design-hero {
+    padding: var(--space-section) 0 var(--space-xl);
+    text-align: center;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: var(--space-section);
+  }
+  .design-hero h1 {
+    font-family: var(--font-display);
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1.07;
+    letter-spacing: -0.28px;
+    color: var(--ink);
+    margin-bottom: var(--space-sm);
+  }
+  .design-hero p {
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.19;
+    letter-spacing: 0.231px;
+    color: var(--ink-muted-48);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .design-hero .badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--primary);
+    color: var(--on-primary);
+    margin-bottom: var(--space-lg);
+  }
+
+  /* ─── Section ─── */
+  .token-section {
+    margin-bottom: var(--space-section);
+  }
+  .token-section h2 {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0;
+    margin-bottom: var(--space-xs);
+    color: var(--ink);
+  }
+  .token-section h2 .section-count {
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.224px;
+    color: var(--ink-muted-48);
+    background: var(--canvas-parchment);
+    padding: 2px 10px;
+    border-radius: var(--radius-pill);
+    margin-left: var(--space-sm);
+    vertical-align: middle;
+  }
+  .token-section > .desc {
+    font-size: 17px;
+    color: var(--ink-muted-48);
+    margin-bottom: var(--space-xl);
+    max-width: 700px;
+  }
+  .token-section h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.374px;
+    margin-bottom: var(--space-md);
+    margin-top: var(--space-xl);
+    color: var(--ink);
+  }
+  .token-section h4 {
+    font-family: var(--font-text);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.24;
+    letter-spacing: -0.374px;
+    margin-bottom: var(--space-xs);
+    margin-top: var(--space-lg);
+    color: var(--ink);
+  }
+
+  /* ─── Color Swatch Grid ─── */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-md);
+  }
+  .swatch {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+    background: var(--canvas);
+    transition: transform 0.2s;
+  }
+  .swatch:hover { transform: scale(1.03); }
+  .swatch-fill {
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    padding: var(--space-xs);
+  }
+  .swatch-fill .hex-tag {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -0.12px;
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+    background: rgba(0,0,0,0.55);
+    color: #fff;
+    backdrop-filter: blur(4px);
+  }
+  .swatch .swatch-label {
+    padding: var(--space-sm) var(--space-xs);
+  }
+  .swatch .swatch-label .token-name {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.224px;
+    color: var(--ink);
+  }
+  .swatch .swatch-label .token-usage {
+    font-size: 12px;
+    color: var(--ink-muted-48);
+    letter-spacing: -0.12px;
+  }
+
+  /* ─── Typography Scale ─── */
+  .type-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--space-md);
+  }
+  .type-table th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -0.12px;
+    color: var(--ink-muted-48);
+    text-transform: uppercase;
+    padding: var(--space-sm) var(--space-xs);
+    border-bottom: 1px solid var(--divider-soft);
+  }
+  .type-table td {
+    padding: var(--space-md) var(--space-xs);
+    border-bottom: 1px solid var(--divider-soft);
+    vertical-align: middle;
+  }
+  .type-table td:first-child {
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .type-table .type-sample {
+    color: var(--ink);
+  }
+  .type-table .type-meta {
+    font-size: 12px;
+    color: var(--ink-muted-48);
+    white-space: nowrap;
+    letter-spacing: -0.12px;
+  }
+  .type-sample-row { transition: background 0.15s; }
+  .type-sample-row:hover { background: var(--canvas-parchment); }
+
+  /* ─── Spacing visual ─── */
+  .spacing-demo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .spacing-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .spacing-row .label {
+    min-width: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.224px;
+  }
+  .spacing-row .bar {
+    background: var(--primary);
+    border-radius: var(--radius-xs);
+    height: 12px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  .spacing-row .meta {
+    font-size: 12px;
+    color: var(--ink-muted-48);
+    letter-spacing: -0.12px;
+  }
+
+  /* ─── Radius visual ─── */
+  .radius-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-lg);
+  }
+  .radius-demo {
+    text-align: center;
+  }
+  .radius-demo .shape {
+    width: 80px;
+    height: 80px;
+    background: var(--canvas-parchment);
+    border: 1px solid var(--hairline);
+    margin: 0 auto var(--space-xs);
+  }
+  .radius-demo .label {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.224px;
+  }
+  .radius-demo .meta {
+    font-size: 12px;
+    color: var(--ink-muted-48);
+    letter-spacing: -0.12px;
+  }
+
+  /* ─── Elevation ─── */
+  .elevation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-lg);
+  }
+  .elevation-card {
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.224px;
+    background: var(--canvas);
+    border: 1px solid var(--hairline);
+    transition: transform 0.2s;
+  }
+  .elevation-card:hover { transform: scale(1.02); }
+  .elevation-card .label { margin-bottom: var(--space-xs); }
+  .elevation-card .meta {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-muted-48);
+    letter-spacing: -0.12px;
+  }
+
+  /* ─── Components ─── */
+  .component-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-xl);
+  }
+  .component-card {
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--canvas);
+    transition: transform 0.2s;
+  }
+  .component-card:hover { transform: translateY(-2px); }
+  .component-card .preview {
+    padding: var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    border-bottom: 1px solid var(--divider-soft);
+  }
+  .component-card .info {
+    padding: var(--space-md);
+  }
+  .component-card .info .name {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.224px;
+  }
+  .component-card .info .props {
+    font-size: 12px;
+    color: var(--ink-muted-48);
+    letter-spacing: -0.12px;
+    margin-top: 4px;
+    font-family: 'SF Mono', 'Menlo', monospace;
+  }
+
+  /* ─── Apple-style buttons (replica) ─── */
+  .apple-btn-primary {
+    background: var(--primary);
+    color: var(--on-primary);
+    font-family: var(--font-text);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.374px;
+    padding: 11px 22px;
+    border-radius: var(--radius-pill);
+    border: none;
+    cursor: default;
+    transition: transform 0.15s;
+  }
+  .apple-btn-primary:active { transform: scale(0.95); }
+  .apple-btn-primary:focus {
+    outline: 2px solid var(--primary-focus);
+    outline-offset: 2px;
+  }
+  .apple-btn-secondary-pill {
+    background: transparent;
+    color: var(--primary);
+    font-family: var(--font-text);
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.374px;
+    padding: 11px 22px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--primary);
+    cursor: default;
+  }
+  .apple-btn-dark-utility {
+    background: var(--ink);
+    color: var(--on-dark);
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.29;
+    letter-spacing: -0.224px;
+    padding: 8px 15px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: default;
+  }
+  .apple-btn-pearl-capsule {
+    background: var(--surface-pearl);
+    color: var(--ink-muted-80);
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.224px;
+    padding: 8px 14px;
+    border-radius: var(--radius-md);
+    border: 3px solid var(--divider-soft);
+    cursor: default;
+  }
+  .apple-btn-store-hero {
+    background: var(--primary);
+    color: var(--on-primary);
+    font-family: var(--font-text);
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: 0;
+    padding: 14px 28px;
+    border-radius: var(--radius-pill);
+    border: none;
+    cursor: default;
+  }
+  .apple-btn-icon-circular {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(210, 210, 215, 0.64);
+    color: var(--ink);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: default;
+  }
+  .apple-text-link {
+    color: var(--primary);
+    font-family: var(--font-text);
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.374px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: default;
+  }
+  .apple-text-link-on-dark {
+    color: var(--primary-on-dark);
+    font-family: var(--font-text);
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.374px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: default;
+  }
+
+  /* component preview dark tile */
+  .preview-tile-dark {
+    background: var(--surface-tile-1);
+  }
+
+  /* ─── Nav replicas ─── */
+  .global-nav-mini {
+    background: var(--surface-black);
+    color: var(--on-dark);
+    height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 20px;
+    font-family: var(--font-text);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.12px;
+    line-height: 1;
+    width: 100%;
+    border-radius: var(--radius-sm);
+  }
+  .global-nav-mini .spacer { flex: 1; }
+  .sub-nav-mini {
+    background: rgba(245, 245, 247, 0.8);
+    backdrop-filter: blur(20px) saturate(180%);
+    height: 52px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 16px;
+    width: 100%;
+    border-radius: var(--radius-sm);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    font-family: var(--font-text);
+  }
+  .sub-nav-mini .cat { font-size: 21px; font-weight: 600; letter-spacing: 0.231px; line-height: 1.19; color: var(--ink); }
+  .sub-nav-mini .spacer { flex: 1; }
+  .sub-nav-mini .link { font-size: 14px; font-weight: 400; letter-spacing: -0.224px; line-height: 1.29; color: var(--ink); }
+
+  /* ─── Breakpoints table ─── */
+  .bp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--space-md);
+  }
+  .bp-table th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -0.12px;
+    color: var(--ink-muted-48);
+    text-transform: uppercase;
+    padding: var(--space-sm) var(--space-xs);
+    border-bottom: 1px solid var(--divider-soft);
+  }
+  .bp-table td {
+    padding: var(--space-md) var(--space-xs);
+    border-bottom: 1px solid var(--divider-soft);
+    font-size: 14px;
+    letter-spacing: -0.224px;
+  }
+  .bp-table td:first-child { font-weight: 600; }
+  .bp-table .bp-bar {
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--primary);
+    opacity: 0.6;
+  }
+
+  /* ─── Do / Don't ─── */
+  .dos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+  }
+  @media (max-width: 640px) { .dos-grid { grid-template-columns: 1fr; } }
+  .do-col, .dont-col {
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+  }
+  .do-col {
+    background: #e8f5e9;
+    border-left: 4px solid #2e7d32;
+  }
+  .do-col h4 { color: #2e7d32; margin-top: 0; }
+  .dont-col {
+    background: #fbe9e7;
+    border-left: 4px solid #c62828;
+  }
+  .dont-col h4 { color: #c62828; margin-top: 0; }
+  .do-col ul, .dont-col ul {
+    list-style: none;
+    font-size: 14px;
+    letter-spacing: -0.224px;
+  }
+  .do-col li, .dont-col li {
+    padding: 4px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+  .do-col li::before { content: "✓"; position: absolute; left: 0; color: #2e7d32; font-weight: 600; }
+  .dont-col li::before { content: "✗"; position: absolute; left: 0; color: #c62828; font-weight: 600; }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: var(--canvas-parchment);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl) var(--space-lg);
+    margin-bottom: var(--space-section);
+  }
+  .toc h3 {
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: 0.231px;
+    margin-bottom: var(--space-md);
+    margin-top: 0;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-xs);
+  }
+  .toc a {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.224px;
+    padding: 4px 0;
+    display: inline-block;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .toc a:hover { border-bottom-color: var(--primary); }
+
+  /* ─── Footer ─── */
+  .page-footer {
+    padding: 48px 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-muted-48);
+    letter-spacing: -0.12px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 640px) {
+    .design-hero h1 { font-size: 40px; }
+    .token-section h2 { font-size: 34px; }
+    .color-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .type-table { font-size: 13px; }
+    .type-table td, .type-table th { padding: var(--space-xs); }
+    .component-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-wrapper">
+
+  <!-- ─── Hero ─── -->
+  <header class="design-hero">
+    <span class="badge">DESIGN TOKENS v1.0</span>
+    <h1>Apple 设计标记语言</h1>
+    <p>A photography-first interface design system — one accent, two fonts, and a rhythm of alternating light &amp; dark canvases.</p>
+  </header>
+
+  <!-- ─── TOC ─── -->
+  <nav class="toc">
+    <h3>目录</h3>
+    <div class="toc-grid">
+      <a href="#colors">🎨 色彩</a>
+      <a href="#typography">🔤 字体</a>
+      <a href="#spacing">📐 间距</a>
+      <a href="#radius">⬮ 圆角</a>
+      <a href="#elevation">🌓 深度</a>
+      <a href="#components">🧩 组件</a>
+      <a href="#breakpoints">📱 断点</a>
+      <a href="#dos-donts">✅ Do's &amp; Don'ts</a>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════════ -->
+  <!--  COLORS                                            -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <section class="token-section" id="colors">
+    <h2>🎨 色彩 <span class="section-count">18 tokens</span></h2>
+    <p class="desc">Single-brand accent system. Every interactive element shares <strong>Action Blue #0066cc</strong> — no second accent color exists. Surfaces alternate between white, parchment (#f5f5f7), and near-black tiles.</p>
+
+    <h3>Brand &amp; Accent</h3>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#0066cc;">
+          <span class="hex-tag">#0066cc</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Action Blue</div>
+          <div class="token-usage">primary · all interactive elements</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#0071e3;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.4);">#0071e3</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Focus Blue</div>
+          <div class="token-usage">primary-focus · outline/keyboard focus</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#2997ff;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.4);">#2997ff</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Sky Link Blue</div>
+          <div class="token-usage">primary-on-dark · links on dark tiles</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Surface</h3>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#ffffff; border-bottom:1px solid #e0e0e0;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.5);">#ffffff</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Canvas</div>
+          <div class="token-usage">canvas · dominant white background</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#f5f5f7;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.5);">#f5f5f7</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Parchment</div>
+          <div class="token-usage">canvas-parchment · alternating light tiles, footer</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#fafafc;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.4);">#fafafc</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Pearl</div>
+          <div class="token-usage">surface-pearl · secondary ghost button fill</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#272729;">
+          <span class="hex-tag">#272729</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Near-Black Tile 1</div>
+          <div class="token-usage">surface-tile-1 · primary dark tile</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#2a2a2c;">
+          <span class="hex-tag">#2a2a2c</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Near-Black Tile 2</div>
+          <div class="token-usage">surface-tile-2 · micro-step lighter variant</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#252527;">
+          <span class="hex-tag">#252527</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Near-Black Tile 3</div>
+          <div class="token-usage">surface-tile-3 · video/player frames</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#000000;">
+          <span class="hex-tag">#000000</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Pure Black</div>
+          <div class="token-usage">surface-black · global nav, video</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#d2d2d7;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.5);">#d2d2d7</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Translucent Chip Gray</div>
+          <div class="token-usage">surface-chip-translucent · floating controls</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Text</h3>
+    <div class="color-grid">
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#1d1d1f;">
+          <span class="hex-tag">#1d1d1f</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Near-Black Ink</div>
+          <div class="token-usage">ink / body · all text on light surfaces</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#ffffff; border-bottom:1px solid #e0e0e0;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.5);">#ffffff</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Body On Dark</div>
+          <div class="token-usage">body-on-dark · text on dark tiles</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#cccccc;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.5);">#cccccc</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Body Muted</div>
+          <div class="token-usage">body-muted · secondary copy on dark</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#333333;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.4);">#333333</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Ink Muted 80</div>
+          <div class="token-usage">ink-muted-80 · pearl button text</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#7a7a7a;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.4);">#7a7a7a</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Ink Muted 48</div>
+          <div class="token-usage">ink-muted-48 · disabled, legal fine-print</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Hairlines &amp; Borders</h3>
+    <div class="color-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#f0f0f0;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.4);">#f0f0f0</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Divider Soft</div>
+          <div class="token-usage">divider-soft · border ring on secondary buttons</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-fill" style="background:#e0e0e0;">
+          <span class="hex-tag" style="background:rgba(0,0,0,0.4);">#e0e0e0</span>
+        </div>
+        <div class="swatch-label">
+          <div class="token-name">Hairline</div>
+          <div class="token-usage">hairline · 1px card borders</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════ -->
+  <!--  TYPOGRAPHY                                        -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <section class="token-section" id="typography">
+    <h2>🔤 字体 <span class="section-count">17 tokens</span></h2>
+    <p class="desc">SF Pro Display (headlines ≥ 19px) + SF Pro Text (body &amp; UI). Negative letter-spacing at display sizes for the signature "Apple tight" cadence. Body runs at 17px, not 16px.</p>
+
+    <table class="type-table">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>Sample</th>
+          <th>Size / Weight / Line-Height / Letter-Spacing</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="type-sample-row">
+          <td>hero-display</td>
+          <td><span class="type-sample" style="font-family:var(--font-display);font-size:56px;font-weight:600;line-height:1.07;letter-spacing:-0.28px;">The new MacBook Pro</span></td>
+          <td class="type-meta">56px / 600 / 1.07 / -0.28px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>display-lg</td>
+          <td><span class="type-sample" style="font-family:var(--font-display);font-size:40px;font-weight:600;line-height:1.1;letter-spacing:0;">iPhone 17 Pro</span></td>
+          <td class="type-meta">40px / 600 / 1.10 / 0</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>display-md</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:34px;font-weight:600;line-height:1.47;letter-spacing:-0.374px;">Which iPhone is right for you?</span></td>
+          <td class="type-meta">34px / 600 / 1.47 / -0.374px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>lead</td>
+          <td><span class="type-sample" style="font-family:var(--font-display);font-size:28px;font-weight:400;line-height:1.14;letter-spacing:0.196px;">The most powerful chip ever in a personal computer.</span></td>
+          <td class="type-meta">28px / 400 / 1.14 / 0.196px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>lead-airy</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:24px;font-weight:300;line-height:1.5;letter-spacing:0;">Every product leaves the planet better than it found it.</span></td>
+          <td class="type-meta">24px / 300 / 1.50 / 0</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>tagline</td>
+          <td><span class="type-sample" style="font-family:var(--font-display);font-size:21px;font-weight:600;line-height:1.19;letter-spacing:0.231px;">The future of health on your wrist.</span></td>
+          <td class="type-meta">21px / 600 / 1.19 / 0.231px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>body-strong</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:17px;font-weight:600;line-height:1.24;letter-spacing:-0.374px;">Up to 30 hours of battery life.</span></td>
+          <td class="type-meta">17px / 600 / 1.24 / -0.374px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>body</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:17px;font-weight:400;line-height:1.47;letter-spacing:-0.374px;">The display is the most advanced LCD in the industry, featuring ProMotion technology that adapts from 10 Hz to 120 Hz.</span></td>
+          <td class="type-meta">17px / 400 / 1.47 / -0.374px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>dense-link</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:17px;font-weight:400;line-height:2.41;letter-spacing:0;">Shop Mac<br>Shop iPad<br>Shop iPhone</span></td>
+          <td class="type-meta">17px / 400 / 2.41 / 0</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>caption</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:14px;font-weight:400;line-height:1.43;letter-spacing:-0.224px;">Secondary captions and button text.</span></td>
+          <td class="type-meta">14px / 400 / 1.43 / -0.224px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>caption-strong</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:14px;font-weight:600;line-height:1.29;letter-spacing:-0.224px;">Emphasized caption</span></td>
+          <td class="type-meta">14px / 600 / 1.29 / -0.224px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>button-large</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:18px;font-weight:300;line-height:1;letter-spacing:0;">Shop iPhone</span></td>
+          <td class="type-meta">18px / 300 / 1.0 / 0</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>button-utility</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:14px;font-weight:400;line-height:1.29;letter-spacing:-0.224px;">Sign In</span></td>
+          <td class="type-meta">14px / 400 / 1.29 / -0.224px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>fine-print</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:12px;font-weight:400;line-height:1;letter-spacing:-0.12px;">Copyright © 2025 Apple Inc. All rights reserved.</span></td>
+          <td class="type-meta">12px / 400 / 1.0 / -0.12px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>micro-legal</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:10px;font-weight:400;line-height:1.3;letter-spacing:-0.08px;">* Promotional pricing for new subscribers only.</span></td>
+          <td class="type-meta">10px / 400 / 1.3 / -0.08px</td>
+        </tr>
+        <tr class="type-sample-row">
+          <td>nav-link</td>
+          <td><span class="type-sample" style="font-family:var(--font-text);font-size:12px;font-weight:400;line-height:1;letter-spacing:-0.12px;">Store &nbsp; Mac &nbsp; iPad &nbsp; iPhone &nbsp; Watch</span></td>
+          <td class="type-meta">12px / 400 / 1.0 / -0.12px</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Principles</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--space-md);margin-top:var(--space-md);">
+      <div style="padding:var(--space-md);background:var(--canvas-parchment);border-radius:var(--radius-lg);">
+        <strong>Negative letter-spacing</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">Every headline ≥ 17px carries a tracking tighten (−0.12 to −0.374px). Never used at 12px or below.</div>
+      </div>
+      <div style="padding:var(--space-md);background:var(--canvas-parchment);border-radius:var(--radius-lg);">
+        <strong>Body at 17px, not 16px</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">Breaks the SaaS convention. The extra pixel gives an unmistakable "reading, not scanning" pace.</div>
+      </div>
+      <div style="padding:var(--space-md);background:var(--canvas-parchment);border-radius:var(--radius-lg);">
+        <strong>Weight 300 is rare</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">Used as a light-atmosphere cue on button-large (18px) and lead-airy (24px).</div>
+      </div>
+      <div style="padding:var(--space-md);background:var(--canvas-parchment);border-radius:var(--radius-lg);">
+        <strong>Weight 600, not 700</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">Headlines sit at 600. Weight 700 is sparingly used for tagline (21px).</div>
+      </div>
+      <div style="padding:var(--space-md);background:var(--canvas-parchment);border-radius:var(--radius-lg);">
+        <strong>No weight 500</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">The ladder is 300 / 400 / 600 / 700. Mid-weight readings always use 600.</div>
+      </div>
+      <div style="padding:var(--space-md);background:var(--canvas-parchment);border-radius:var(--radius-lg);">
+        <strong>Context-specific line-height</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">Display: 1.07–1.19 (tight). Body: 1.47. Footer dense-link: 2.41.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════ -->
+  <!--  SPACING                                           -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <section class="token-section" id="spacing">
+    <h2>📐 间距 <span class="section-count">8 tokens</span></h2>
+    <p class="desc">Base unit 8px. Structural layout snaps to 8/12/16/20/24. Section vertical padding is 80px for product tiles.</p>
+
+    <div class="spacing-demo">
+      <div class="spacing-row"><span class="label">section · 80px</span><div class="bar" style="width:320px;"></div><span class="meta">80px</span></div>
+      <div class="spacing-row"><span class="label">xxl · 48px</span><div class="bar" style="width:192px;"></div><span class="meta">48px</span></div>
+      <div class="spacing-row"><span class="label">xl · 32px</span><div class="bar" style="width:128px;"></div><span class="meta">32px</span></div>
+      <div class="spacing-row"><span class="label">lg · 24px</span><div class="bar" style="width:96px;"></div><span class="meta">24px</span></div>
+      <div class="spacing-row"><span class="label">md · 17px</span><div class="bar" style="width:68px;"></div><span class="meta">17px</span></div>
+      <div class="spacing-row"><span class="label">sm · 12px</span><div class="bar" style="width:48px;"></div><span class="meta">12px</span></div>
+      <div class="spacing-row"><span class="label">xs · 8px</span><div class="bar" style="width:32px;"></div><span class="meta">8px</span></div>
+      <div class="spacing-row"><span class="label">xxs · 4px</span><div class="bar" style="width:16px;"></div><span class="meta">4px</span></div>
+    </div>
+
+    <h3>Grid &amp; Container</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-md);margin-top:var(--space-md);">
+      <div style="padding:var(--space-md);border:1px solid var(--hairline);border-radius:var(--radius-lg);">
+        <strong>Max content width</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">~980px (text-heavy) · ~1440px (product grids) · full-bleed (product tiles)</div>
+      </div>
+      <div style="padding:var(--space-md);border:1px solid var(--hairline);border-radius:var(--radius-lg);">
+        <strong>Column patterns</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">3–5 col utility grids · 2-col side-by-side tiles · single-col centered stack</div>
+      </div>
+      <div style="padding:var(--space-md);border:1px solid var(--hairline);border-radius:var(--radius-lg);">
+        <strong>Gutters</strong>
+        <div style="font-size:14px;color:var(--ink-muted-48);margin-top:4px;">20–24px between cards in a utility grid.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════ -->
+  <!--  RADIUS                                            -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <section class="token-section" id="radius">
+    <h2>⬮ 圆角 <span class="section-count">7 tokens</span></h2>
+    <p class="desc">Four distinct grammar groups: full-bleed (0), compact utility (8px), utility cards (18px), pills (9999px). Never mix radii grammars.</p>
+
+    <div class="radius-grid">
+      <div class="radius-demo">
+        <div class="shape" style="border-radius:0;"></div>
+        <div class="label">none</div>
+        <div class="meta">0px · full-bleed tiles</div>
+      </div>
+      <div class="radius-demo">
+        <div class="shape" style="border-radius:5px;"></div>
+        <div class="label">xs</div>
+        <div class="meta">5px · inline chip links</div>
+      </div>
+      <div class="radius-demo">
+        <div class="shape" style="border-radius:8px;"></div>
+        <div class="label">sm</div>
+        <div class="meta">8px · dark utility buttons</div>
+      </div>
+      <div class="radius-demo">
+        <div class="shape" style="border-radius:11px;"></div>
+        <div class="label">md</div>
+        <div class="meta">11px · Pearl capsules</div>
+      </div>
+      <div class="radius-demo">
+        <div class="shape" style="border-radius:18px;"></div>
+        <div class="label">lg</div>
+        <div class="meta">18px · utility cards</div>
+      </div>
+      <div class="radius-demo">
+        <div class="shape" style="border-radius:9999px;"></div>
+        <div class="label">pill</div>
+        <div class="meta">9999px · CTAs, chips, search</div>
+      </div>
+      <div class="radius-demo">
+        <div class="shape" style="border-radius:9999px;width:80px;height:80px;"></div>
+        <div class="label">full</div>
+        <div class="meta">50% · circular controls</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════ -->
+  <!--  ELEVATION                                         -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <section class="token-section" id="elevation">
+    <h2>🌓 深度与阴影 <span class="section-count">1 shadow</span></h2>
+    <p class="desc">Apple uses exactly one drop-shadow, applied to product photographic imagery — never to cards, buttons, or text. Elevation comes from surface-color change and backdrop blur.</p>
+
+    <div class="elevation-grid">
+      <div class="elevation-card" style="box-shadow:none;">
+        <div class="label">Flat</div>
+        <div class="meta">No shadow, no border<br>Full-bleed tiles, nav, footer</div>
+      </div>
+      <div class="elevation-card" style="box-shadow:0 0 0 1px rgba(0,0,0,0.08);">
+        <div class="label">Soft Hairline</div>
+        <div class="meta">1px rgba(0,0,0,0.08) border<br>Utility cards, sub-nav separator</div>
+      </div>
+      <div class="elevation-card" style="backdrop-filter:blur(20px) saturate(180%);background:rgba(245,245,247,0.8);">
+        <div class="label">Backdrop Blur</div>
+        <div class="meta">saturate(180%) blur(20px)<br>Sub-nav, floating sticky bar</div>
+      </div>
+      <div class="elevation-card" style="box-shadow:rgba(0,0,0,0.22) 3px 5px 30px 0;">
+        <div class="label">★ Product Shadow</div>
+        <div class="meta">rgba(0,0,0,0.22) 3px 5px 30px<br>The only true shadow — product imagery only</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════ -->
+  <!--  COMPONENTS                                        -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <section class="token-section" id="components">
+    <h2>🧩 组件 <span class="section-count">15 components</span></h2>
+    <p class="desc">Full-bleed product tiles, pill CTAs, frosted sub-nav, and utility cards — all sharing one color, two font familiess, and zero decorative chrome.</p>
+
+    <h3>导航</h3>
+    <div class="component-grid">
+      <div class="component-card">
+        <div class="preview" style="padding:var(--space-sm);">
+          <div class="global-nav-mini">
+            <span>⌘</span> Store Mac iPad iPhone Watch
+            <span class="spacer"></span>
+            <span>🔍 🛒</span>
+          </div>
+        </div>
+        <div class="info">
+          <div class="name">global-nav</div>
+          <div class="props">background: #000000 · height: 44px · font: 12px/400 nav-link</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview" style="padding:var(--space-sm);">
+          <div class="sub-nav-mini">
+            <span class="cat">iPhone</span>
+            <span class="link">Overview</span>
+            <span class="link">Tech Specs</span>
+            <span class="spacer"></span>
+            <button class="apple-btn-primary" style="font-size:14px;padding:6px 16px;">Buy</button>
+          </div>
+        </div>
+        <div class="info">
+          <div class="name">sub-nav-frosted</div>
+          <div class="props">backdrop: blur(20px) · height: 52px · font: 21px/600 tagline</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>按钮</h3>
+    <div class="component-grid">
+      <div class="component-card">
+        <div class="preview"><button class="apple-btn-primary">Learn More</button></div>
+        <div class="info">
+          <div class="name">button-primary</div>
+          <div class="props">bg: #0066cc · pill · 17px/400 · padding: 11px 22px</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview"><button class="apple-btn-secondary-pill">Learn More</button></div>
+        <div class="info">
+          <div class="name">button-secondary-pill</div>
+          <div class="props">transparent · 1px solid #0066cc · pill</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview"><button class="apple-btn-dark-utility">Sign In</button></div>
+        <div class="info">
+          <div class="name">button-dark-utility</div>
+          <div class="props">bg: #1d1d1f · 8px radius · 14px/400</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview"><button class="apple-btn-pearl-capsule">Shop</button></div>
+        <div class="info">
+          <div class="name">button-pearl-capsule</div>
+          <div class="props">bg: #fafafc · 3px soft border · 11px radius</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview"><button class="apple-btn-store-hero">Shop iPhone</button></div>
+        <div class="info">
+          <div class="name">button-store-hero</div>
+          <div class="props">bg: #0066cc · pill · 18px/300 · padding: 14px 28px</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview"><button class="apple-btn-icon-circular">⌕</button></div>
+        <div class="info">
+          <div class="name">button-icon-circular</div>
+          <div class="props">44×44px · 64% translucent · rounded 50%</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview"><span class="apple-text-link">Learn more &gt;</span></div>
+        <div class="info">
+          <div class="name">text-link</div>
+          <div class="props">color: #0066cc · 17px/400</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview preview-tile-dark" style="padding:var(--space-xl);">
+          <span class="apple-text-link-on-dark">Learn more &gt;</span>
+        </div>
+        <div class="info">
+          <div class="name">text-link-on-dark</div>
+          <div class="props">color: #2997ff · for dark surfaces</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>产品瓷片 (Product Tiles)</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:var(--space-lg);">
+      <div style="background:#ffffff;border-radius:0;padding:40px 24px;text-align:center;border:1px solid var(--hairline);">
+        <div style="font-size:28px;font-weight:600;line-height:1.1;font-family:var(--font-display);">MacBook Pro</div>
+        <div style="font-size:17px;color:var(--ink-muted-48);margin:8px 0 16px;">Mind-blowing. Head-turning.</div>
+        <div style="display:flex;gap:12px;justify-content:center;">
+          <button class="apple-btn-primary">Learn More</button>
+          <button class="apple-btn-secondary-pill">Buy</button>
+        </div>
+        <div class="info" style="margin-top:12px;">
+          <div class="name">product-tile-light</div>
+          <div class="props" style="font-size:12px;color:var(--ink-muted-48);">bg: #ffffff · padding: 80px · display-lg headline</div>
+        </div>
+      </div>
+      <div style="background:#f5f5f7;border-radius:0;padding:40px 24px;text-align:center;border:1px solid var(--hairline);">
+        <div style="font-size:28px;font-weight:600;line-height:1.1;font-family:var(--font-display);">iPad Pro</div>
+        <div style="font-size:17px;color:var(--ink-muted-48);margin:8px 0 16px;">Thin. Light. Epic.</div>
+        <div style="display:flex;gap:12px;justify-content:center;">
+          <button class="apple-btn-primary">Learn More</button>
+          <button class="apple-btn-secondary-pill">Buy</button>
+        </div>
+        <div class="info" style="margin-top:12px;">
+          <div class="name">product-tile-parchment</div>
+          <div class="props" style="font-size:12px;color:var(--ink-muted-48);">bg: #f5f5f7 · alternating light tiles</div>
+        </div>
+      </div>
+      <div style="background:#272729;border-radius:0;padding:40px 24px;text-align:center;border:1px solid #333;color:#fff;">
+        <div style="font-size:28px;font-weight:600;line-height:1.1;font-family:var(--font-display);color:#fff;">iPhone 17 Pro</div>
+        <div style="font-size:17px;color:#cccccc;margin:8px 0 16px;">The ultimate iPhone.</div>
+        <div style="display:flex;gap:12px;justify-content:center;">
+          <button class="apple-btn-primary">Learn More</button>
+          <button class="apple-btn-secondary-pill" style="color:var(--primary);border-color:var(--primary);">Buy</button>
+        </div>
+        <div class="info" style="margin-top:12px;">
+          <div class="name" style="color:#fff;">product-tile-dark</div>
+          <div class="props" style="font-size:12px;color:#999;">bg: #272729 · #ffffff text · padding: 80px</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>卡片 &amp; 杂项</h3>
+    <div class="component-grid">
+      <div class="component-card">
+        <div class="preview" style="flex-direction:column;gap:var(--space-sm);align-items:stretch;padding:var(--space-lg);">
+          <div style="background:#f5f5f7;border-radius:8px;height:60px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-muted-48);">product image</div>
+          <div style="font-size:14px;font-weight:600;">Magic Keyboard</div>
+          <div style="font-size:14px;color:var(--ink-muted-48);">¥999</div>
+          <span class="apple-text-link" style="font-size:14px;">Buy</span>
+        </div>
+        <div class="info">
+          <div class="name">store-utility-card</div>
+          <div class="props">bg: #ffffff · 18px radius · 24px padding · 1px hairline</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview" style="gap:var(--space-sm);flex-wrap:wrap;">
+          <span style="background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--radius-pill);padding:12px 16px;font-size:14px;">iPhone 17 Pro</span>
+          <span style="background:var(--canvas);border:2px solid var(--primary-focus);border-radius:var(--radius-pill);padding:12px 16px;font-size:14px;">iPhone 17 Pro Max</span>
+          <span style="background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--radius-pill);padding:12px 16px;font-size:14px;">iPhone 17</span>
+        </div>
+        <div class="info">
+          <div class="name">configurator-option-chip</div>
+          <div class="props">pill · 12px 16px · selected: 2px solid #0071e3</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview" style="padding:var(--space-sm);">
+          <div style="background:rgba(245,245,247,0.85);backdrop-filter:blur(20px) saturate(180%);height:64px;border-radius:var(--radius-sm);display:flex;align-items:center;padding:0 20px;width:100%;border-bottom:1px solid rgba(0,0,0,0.08);">
+            <span style="font-size:17px;color:var(--ink);">From ¥8,999</span>
+            <span class="spacer" style="flex:1;"></span>
+            <button class="apple-btn-primary" style="font-size:14px;padding:6px 16px;">Add to Bag</button>
+          </div>
+        </div>
+        <div class="info">
+          <div class="name">floating-sticky-bar</div>
+          <div class="props">parchment · backdrop-blur · height: 64px · buy page</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview"><div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:var(--radius-pill);padding:12px 20px;height:44px;display:flex;align-items:center;gap:8px;width:240px;font-size:17px;color:var(--ink-muted-48);">🔍 Search accessories</div></div>
+        <div class="info">
+          <div class="name">search-input</div>
+          <div class="props">pill · 17px/400 · 12px 20px · 1px soft border</div>
+        </div>
+      </div>
+      <div class="component-card">
+        <div class="preview preview-tile-dark" style="flex-direction:column;gap:var(--space-md);align-items:flex-start;padding:var(--space-lg);">
+          <div style="color:#fff;font-size:28px;font-weight:600;font-family:var(--font-display);">Apple 2030</div>
+          <div style="color:#fff;font-size:17px;opacity:0.8;">A commitment to be carbon neutral by 2030.</div>
+          <button class="apple-btn-primary">Learn more</button>
+        </div>
+        <div class="info">
+          <div class="name">environment-quote-card</div>
+          <div class="props">dark photographic canvas · #272729 fallback</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════ -->
+  <!--  BREAKPOINTS                                       -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <section class="token-section" id="breakpoints">
+    <h2>📱 响应式断点 <span class="section-count">8 breakpoints</span></h2>
+    <p class="desc">Structural breakpoints: 1440px (content lock), 1068px (small desktop), 833px (tablet landscape), 734px (tablet portrait), 640px (phone), 480px (small phone).</p>
+
+    <table class="bp-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Width</th>
+          <th>Key Changes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Wide Desktop</td><td>≥ 1441px</td><td>Content locks at 1440px, margins absorb extra width</td></tr>
+        <tr><td>Desktop</td><td>1069–1440px</td><td>Full layout · 4–5 column store grids</td></tr>
+        <tr><td>Small Desktop</td><td>1024–1068px</td><td>Product tiles use 2/3 width with margin gutters · hero h1 stays at 40px</td></tr>
+        <tr><td>Tablet Landscape</td><td>834–1023px</td><td>Global nav returns fully expanded · 3-column grids → 2-column</td></tr>
+        <tr><td>Tablet Portrait</td><td>736–833px</td><td>Global nav → hamburger · sub-nav hides category chips, keeps primary CTA</td></tr>
+        <tr><td>Large Phone</td><td>641–735px</td><td>Tiles transition to 48px vertical padding · fine-print wraps</td></tr>
+        <tr><td>Phone</td><td>420–640px</td><td>Single-column stack · product renders at 80% width · hero h1 → 34px</td></tr>
+        <tr><td>Small Phone</td><td>≤ 419px</td><td>Single-column tiles · sub-nav collapses · hero typography → 28px</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════ -->
+  <!--  DOS & DON'TS                                      -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <section class="token-section" id="dos-donts">
+    <h2>✅ Do's &amp; Don'ts</h2>
+    <p class="desc">Apple's design language is strict — follow these rules to keep the system coherent.</p>
+
+    <div class="dos-grid">
+      <div class="do-col">
+        <h4>✅ 应该</h4>
+        <ul>
+          <li>用 Action Blue (#0066cc) 做所有交互元素 — 链接、按钮、焦点信号</li>
+          <li>Headlines 使用负字间距 (−0.28 to −0.374px) 获得 "Apple tight" 感觉</li>
+          <li>正文用 17px（不是 16px）— 额外的像素定义了阅读节奏</li>
+          <li>交替使用浅色和深色 tile — 颜色变化本身即是分隔</li>
+          <li>pill 圆角 (9999px) 只用于主要 CTA 和 "动作" 元素</li>
+          <li>产品阴影只用于产品渲染图上 — 从不用于卡片、按钮或文字</li>
+          <li>对所有按钮使用 transform: scale(0.95) 作为按下状态</li>
+          <li>全局导航保持纯黑 (#000000) 背景</li>
+        </ul>
+      </div>
+      <div class="dont-col">
+        <h4>❌ 不应该</h4>
+        <ul>
+          <li>不要引入第二个强调色 — 所有 "点击我" 信号都是 Action Blue</li>
+          <li>不要给卡片、按钮或文本加阴影 — 阴影只属于产品图片</li>
+          <li>不要用渐变做装饰背景 — 氛围来自摄影图片</li>
+          <li>不要用 weight 500 设正文 — 字体阶梯是 300/400/600/700</li>
+          <li>不要圆角 full-bleed tile — tile 是矩形且边缘到边缘</li>
+          <li>不要把 body 的 line-height 小于 1.47</li>
+          <li>不要混合圆角语法 — sm(8px) / lg(18px) / pill(9999px) 各司其职</li>
+          <li>不要在浅色表面用 Sky Link Blue (#2997ff) — 它只在深色 tile 上用</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer class="page-footer">
+    <p>Apple Design Token Reference · 基于 Apple DESIGN.md · 仅供内部分析使用</p>
+    <p style="margin-top:4px;">所有设计资产归 Apple Inc. 所有 · 本文档不包含未公开的专有信息</p>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1094 @@
+/* ══════════════════════════════════════════════════════
+   ReleaseOn App Styles — Apple Design Language
+   ══════════════════════════════════════════════════════ */
+
+/* ─── Icon Font (icomoon) ─── */
+@font-face {
+  font-family: icomoon;
+  font-weight: 400;
+  font-style: normal;
+  src: url(./fonts/icomoon.ttf?wcusdg) format('truetype');
+}
+
+[class*=" icon-"],
+[class^=icon-] {
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  font-family: icomoon !important;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  -moz-osx-font-smoothing: grayscale;
+  speak: none;
+  text-transform: none;
+}
+
+.icon-angle-right:before { content: '\e606'; }
+.icon-logo:before { content: '\e620'; }
+.icon-menu:before { content: '\e61e'; }
+.icon-pen:before { content: '\e626'; }
+.icon-eye:before { content: '\e62b'; }
+.icon-owner:before { content: '\e62f'; }
+.icon-upload-cloud2:before { content: '\e632'; }
+.icon-android:before { content: '\e633'; }
+.icon-trash:before { content: '\e634'; }
+.icon-ios:before { content: '\e63f'; }
+.icon-cloud-download:before { content: '\e607'; }
+.icon-device:before { content: '\e622'; }
+.icon-file:before { content: '\e624'; }
+.icon-calendar:before { content: '\e637'; }
+.icon-plus:before { content: "\e62c"; }
+.icon-box:before { content: "\e620"; }
+
+/* ─── Base ─── */
+html, body {
+  min-height: 100vh;
+}
+body {
+  background: var(--apple-parchment);
+  color: var(--apple-ink);
+  -webkit-font-smoothing: antialiased;
+  min-width: 1024px;
+  padding-bottom: 0;
+}
+@media (max-width: 1068px) {
+  body { min-width: 0; }
+}
+
+/* ─── NG Hide Utility ─── */
+.ng-hide:not(.ng-hide-animate) {
+  display: none !important;
+}
+
+/* ─── Alert Bar ─── */
+.alert-bar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #F85835;
+  color: #FFF;
+  z-index: 999;
+  transform: translateY(0);
+  transition: all .4s;
+}
+.alert-bar.ng-hide {
+  transform: translateY(-100%);
+}
+.alert-bar .action {
+  position: relative;
+  right: 0;
+  float: right;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  cursor: pointer;
+}
+.alert-bar .action:after,
+.alert-bar .action:before {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 2px;
+  margin-left: -12px;
+  background-color: #FFF;
+  content: ' ';
+  transform: rotate(-45deg);
+  transform-origin: center;
+}
+.alert-bar .action:after {
+  transform: rotate(45deg);
+}
+.alert-bar .inner {
+  height: 80px;
+  padding: 20px 140px;
+  line-height: 40px;
+  font-size: 16px;
+  text-align: center;
+}
+.alert-bar .inner p {
+  margin-bottom: 0;
+}
+
+/* ─── Menu Toggle ─── */
+.menu-toggle {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0;
+}
+@media screen and (min-width: 768px) {
+  .menu-toggle {
+    display: none;
+  }
+}
+
+/* ─── Middle Wrapper (content width constraint) ─── */
+.middle-wrapper {
+  width: 1024px;
+  margin: 0 auto;
+  position: relative;
+}
+@media (max-width: 1068px) {
+  .middle-wrapper {
+    width: 100%;
+    padding: 0 24px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   NAVBAR
+   ══════════════════════════════════════════════════════ */
+
+/* Top transparent nav (home page) */
+.navbar-transparent {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 18px 0;
+  border: 0;
+  text-align: right;
+  z-index: 3;
+  opacity: 0;
+}
+.navbar-transparent .navbar-brand {
+  display: inline-flex;
+  height: 44px;
+  padding: 0 15px 0 30px;
+  line-height: 44px;
+  color: #FFF;
+  font-size: 24px;
+  cursor: pointer;
+  align-items: center;
+  overflow: hidden;
+  text-decoration: none;
+}
+.navbar-transparent .navbar-brand i {
+  display: block;
+}
+.navbar-transparent .dropdown {
+  display: inline-block;
+  line-height: 39px;
+  color: #FFF;
+  font-size: 0;
+  vertical-align: top;
+  cursor: pointer;
+  z-index: 98;
+}
+.navbar-transparent .dropdown > div {
+  padding: 0 16px;
+}
+.navbar-transparent .dropdown,
+.navbar-transparent .navbar-brand {
+  transition: all .5s;
+}
+.navbar-transparent.navbar-black {
+  z-index: 14;
+}
+.navbar-transparent.navbar-black .navbar-brand {
+  color: #000;
+}
+.navbar-transparent.navbar-black .dropdown {
+  border-color: #000;
+  color: #000;
+}
+
+/* Breadcrumb nav bar (detail pages) */
+.navbar-wrapper {
+  position: relative;
+  border-bottom: 1px solid rgba(208, 208, 208, 0.3);
+  background: var(--apple-canvas);
+  font-size: 0;
+}
+.navbar-wrapper .navbar-header-wrap {
+  position: relative;
+  background: var(--apple-canvas);
+}
+.navbar-wrapper .icon-angle-right {
+  display: inline-block;
+  margin-left: 12px;
+  line-height: 30px;
+  color: #D9D9D9;
+  font-size: 16px;
+  vertical-align: middle;
+  transition: .25s;
+  pointer-events: none;
+}
+.navbar-wrapper nav {
+  padding: 25px 0;
+}
+.navbar-wrapper .navbar-title {
+  display: inline-block;
+  font-size: 24px;
+  vertical-align: middle;
+  overflow: hidden;
+}
+.navbar-wrapper .navbar-title i {
+  display: flex;
+  height: 30px;
+  align-items: center;
+}
+.navbar-wrapper .logo {
+  position: relative;
+  margin: 0 0 2px;
+  background: var(--apple-canvas);
+  line-height: 28px;
+  font-size: 21px;
+  cursor: pointer;
+  z-index: 3;
+  transition: all .25s;
+}
+.navbar-wrapper .logo:hover {
+  color: #4A4A4A;
+}
+.navbar-wrapper .primary-title,
+.navbar-wrapper .secondary-title {
+  margin-left: 18px;
+  line-height: 24px;
+  font-size: 20px;
+  transition: all .25s;
+}
+.navbar-wrapper .primary-title {
+  text-decoration: none;
+  transition-delay: .05s;
+}
+.navbar-wrapper .primary-title a {
+  color: var(--apple-ink-muted-48);
+  text-decoration: none;
+}
+.navbar-wrapper .primary-title a:hover {
+  color: #4A4A4A;
+}
+.navbar-wrapper .secondary-title {
+  display: inline-block;
+  white-space: nowrap;
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: normal;
+}
+
+/* ══════════════════════════════════════════════════════
+   PAGE: APP LIST (index.html)
+   ══════════════════════════════════════════════════════ */
+
+.page-apps {
+  padding-top: 30px;
+  background: var(--apple-parchment);
+}
+
+/* App grid */
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding: 15px 0 0;
+}
+@media (max-width: 1068px) {
+  .app-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Upload Card */
+.components-upload-card .card {
+  height: 460px;
+  padding: 0;
+  background: var(--apple-canvas);
+  cursor: pointer;
+  transition: all .25s;
+  border-radius: var(--apple-radius-lg);
+  border: 1px solid var(--apple-hairline);
+}
+.components-upload-card .card .dashed-space {
+  height: 100%;
+  background: var(--apple-primary);
+  color: #FFF;
+  border-radius: var(--apple-radius-lg);
+}
+.components-upload-card .card .dashed-space table {
+  width: 100%;
+  height: 100%;
+}
+.components-upload-card .card .dashed-space i {
+  display: block;
+  margin-bottom: 20px;
+  color: #FFF;
+  font-size: 80px;
+  transition: all .25s;
+}
+.components-upload-card .drag-state span:first-child {
+  display: block;
+}
+.components-upload-card .drag-state span:last-child {
+  display: none;
+}
+.components-upload-card .card:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, .1);
+  transform: translateY(-4px);
+}
+.components-upload-card .card:hover .dashed-space i {
+  transform: scale(1.2);
+}
+
+/* App Card */
+.card.app {
+  position: relative;
+  height: 460px;
+  padding: 44px;
+  background: var(--apple-canvas);
+  transition: all .25s;
+  border-radius: var(--apple-radius-lg);
+  border: 1px solid var(--apple-hairline);
+}
+.card.app:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, .1);
+  transform: translateY(-4px);
+}
+.card.app .type-icon {
+  position: absolute;
+  top: 9px;
+  right: 7px;
+  color: #FFF;
+  z-index: 2;
+}
+.card.app .type-mark {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+}
+.card.app .appicon {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+.card.app .appicon img {
+  border-radius: 17.54%;
+}
+.card.app .appname {
+  display: inline-block;
+  margin-top: 36px;
+  font-size: 18px;
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 100%;
+  word-wrap: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card.app .appname i {
+  margin-right: 6px;
+  color: var(--apple-primary);
+  font-size: 16px;
+}
+.card.app:hover .appname {
+  color: #4A4A4A;
+}
+.card.app table {
+  width: 100%;
+  table-layout: fixed;
+}
+.card.app table tr td {
+  padding: 2px 0;
+  font-size: 12px;
+  white-space: nowrap;
+  max-width: 100%;
+  word-wrap: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card.app table tr td > span {
+  display: inline-block;
+  white-space: nowrap;
+  max-width: 100%;
+  word-wrap: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card.app table tr td:last-child {
+  width: 80%;
+  color: var(--apple-ink);
+}
+.card.app .action {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 40px 0 40px 40px;
+}
+.card.app .action a {
+  display: inline-block;
+  margin-right: 4px;
+  padding: 8px 20px;
+  border: 1px solid var(--apple-ink-muted-48);
+  color: var(--apple-ink-muted-48);
+  text-decoration: none;
+  text-align: center;
+  border-radius: var(--apple-radius-pill);
+  transition: all .25s;
+}
+.card.app .action a:hover {
+  color: var(--apple-primary);
+  border-color: var(--apple-primary);
+}
+.card.app .action a i {
+  display: inline-block;
+  margin-right: 4px;
+  font-size: 18px;
+  vertical-align: middle;
+}
+.card.app .action a .icon-pen {
+  font-size: 16px;
+}
+.card.app .action .btn-remove {
+  padding: 10px;
+  border: 1px solid var(--apple-ink-muted-48);
+  background: transparent;
+  font-size: 0;
+  vertical-align: top;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.card.app .action .btn-remove i {
+  font-size: 16px;
+}
+.card.app .action .btn-remove:hover {
+  background: #EC4242;
+  color: #FFF;
+  border-color: #EC4242;
+}
+
+/* Platform color marks */
+.card-android .type-mark {
+  width: 0;
+  height: 0;
+  border-top: 48px solid #A4C639;
+  border-left: 48px solid transparent;
+}
+.card-ios .type-mark {
+  width: 0;
+  height: 0;
+  border-top: 48px solid #C6C7C9;
+  border-left: 48px solid transparent;
+}
+
+/* ══════════════════════════════════════════════════════
+   PAGE: APP DETAIL (list.html)
+   ══════════════════════════════════════════════════════ */
+
+.page-app {
+  padding-bottom: 80px;
+}
+
+.page-app .banner {
+  padding-top: 60px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(208, 208, 208, .5);
+  background: var(--apple-canvas);
+}
+.page-app .banner .middle-wrapper {
+  position: relative;
+}
+.page-app .banner .middle-wrapper:before {
+  position: absolute;
+  left: 38px;
+  bottom: -52px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(208, 208, 208, .5);
+  border-right: 0;
+  border-bottom: 0;
+  background: var(--apple-parchment);
+  content: ' ';
+  z-index: 2;
+  transform: rotate(45deg);
+  transition: all .25s;
+}
+.page-app.app-integration .banner .middle-wrapper:before {
+  bottom: -50px;
+  width: 20px;
+  height: 20px;
+  left: 295px;
+}
+.page-app.app-info .banner .middle-wrapper:before {
+  bottom: -50px;
+  width: 20px;
+  height: 20px;
+  left: 175px;
+}
+
+.page-app .icon-container {
+  cursor: pointer;
+}
+
+/* Banner info area */
+.banner-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.appicon-large {
+  position: relative;
+  border-radius: 17.544%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.appicon-large img {
+  display: block;
+}
+
+.banner-meta {
+  flex: 1;
+  min-width: 0;
+}
+.banner-meta .badges {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+}
+.banner-meta .badges .badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-xs);
+  color: var(--apple-ink-muted-48);
+  font-size: 12px;
+}
+.banner-meta .badges .badge.short {
+  color: var(--apple-primary);
+  cursor: pointer;
+}
+.banner-meta .badges .badge b {
+  display: inline-block;
+  padding-left: 12px;
+  font-weight: 400;
+  position: relative;
+}
+.banner-meta .badges .badge b:before {
+  position: absolute;
+  left: 3px;
+  top: 2px;
+  height: 12px;
+  border-left: 1px solid var(--apple-hairline);
+  content: ' ';
+}
+
+.banner-actions {
+  flex-shrink: 0;
+}
+
+/* Tabs */
+.tabs-container {
+  margin-top: 40px;
+}
+.tabs-container ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tabs-container ul li a {
+  display: block;
+  padding-left: 15px;
+  border-left: 1px solid var(--apple-hairline);
+  color: var(--apple-ink-muted-48);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .5s;
+  font-size: 14px;
+}
+.tabs-container ul li a:hover {
+  color: var(--apple-ink);
+}
+.tabs-container ul li a > i {
+  display: block;
+  height: 22px;
+  margin-bottom: 14px;
+  font-size: 22px;
+}
+
+.page-app .page-tabcontent {
+  padding-top: 50px;
+}
+
+/* Timeline (Package list) */
+.time-line {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.time-line:before {
+  position: absolute;
+  left: 25px;
+  height: 100%;
+  border-left: 1px solid rgba(151, 151, 151, .2);
+  content: ' ';
+  z-index: 1;
+}
+.time-line li {
+  margin-top: 80px;
+  position: relative;
+}
+.time-line li:first-child {
+  margin-top: 0;
+  padding-left: 80px;
+}
+.time-line li:first-child .dot {
+  display: inline-block;
+  position: absolute;
+  left: 20px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(151, 151, 151, .2);
+  background: var(--apple-ink-muted-48);
+  z-index: 2;
+  border-radius: 50%;
+}
+.time-line li:nth-child(2) { margin-top: 20px; }
+.time-line li:nth-child(3) { margin-top: 40px; }
+.time-line .filter {
+  display: inline-block;
+  position: relative;
+  top: -6px;
+  margin-right: 32px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.time-line .more button {
+  position: relative;
+  width: 160px;
+  padding: 10px 0;
+  border: 1px solid var(--apple-hairline);
+  background: var(--apple-parchment);
+  z-index: 99;
+  border-radius: var(--apple-radius-pill);
+  cursor: pointer;
+}
+
+.directive-view-release {
+  position: relative;
+  padding-left: 80px;
+}
+.directive-view-release > i {
+  display: flex;
+  position: absolute;
+  left: 0;
+  width: 50px;
+  height: 50px;
+  border: 1px solid rgba(151, 151, 151, .2);
+  background: var(--apple-parchment);
+  font-size: 22px;
+  z-index: 2;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+}
+.directive-view-release > i:before {
+  display: inline-block;
+  margin-top: 2px;
+  margin-left: 2px;
+}
+.directive-view-release .release-metainfo {
+  margin-top: 2px;
+}
+.directive-view-release .release-metainfo small {
+  display: inline-block;
+  margin: 8px 0;
+  line-height: 14px;
+  vertical-align: middle;
+}
+.directive-view-release .release-metainfo small i,
+.directive-view-release .release-metainfo small span {
+  display: inline-block;
+  vertical-align: middle;
+}
+.directive-view-release .release-metainfo small i {
+  margin-right: 2px;
+  line-height: 14px;
+}
+.directive-view-release > b {
+  display: inline-block;
+  margin-right: 30px;
+  color: #4A4A4A;
+  font-weight: 400;
+  font-size: 20px;
+  vertical-align: middle;
+}
+.directive-view-release .release-actions {
+  position: relative;
+  margin-top: 10px;
+}
+.directive-view-release .release-actions button {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 4px 10px;
+  border: 1px solid var(--apple-hairline);
+  background: transparent;
+  vertical-align: middle;
+  border-radius: var(--apple-radius-pill);
+  overflow: hidden;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--apple-ink-muted-48);
+}
+.directive-view-release .release-actions button:hover {
+  border-color: var(--apple-primary);
+  color: var(--apple-primary);
+}
+.directive-view-release .release-actions button i {
+  display: inline-block;
+  vertical-align: middle;
+}
+.directive-view-release .release-actions button span {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Tooltip */
+.tooltip-top {
+  position: relative;
+  overflow: visible;
+}
+.tooltip-top:after,
+.tooltip-top:before {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scale(.6);
+  transition: all .25s;
+  opacity: 0;
+  pointer-events: none;
+}
+.tooltip-top:before {
+  bottom: calc(100% + 6px);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--apple-ink);
+  content: ' ';
+  z-index: 4;
+  transform: translateX(-50%) translateY(-10px) scale(.6);
+}
+.tooltip-top:after {
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 12px);
+  padding: 4px 10px;
+  background: var(--apple-ink);
+  color: #FFF;
+  font-size: 12px;
+  text-align: left;
+  white-space: pre;
+  content: attr(tooltip);
+  z-index: 3;
+  border-radius: var(--apple-radius-xs);
+}
+.tooltip-top:hover:after,
+.tooltip-top:hover:before {
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════════════════════
+   APP INFO FORM
+   ══════════════════════════════════════════════════════ */
+
+.apps-app-info .middle-wrapper .app-info-form {
+  position: relative;
+}
+.apps-app-info .middle-wrapper .app-info-form .field {
+  position: relative;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--apple-hairline);
+}
+.apps-app-info .middle-wrapper .app-info-form .field:last-child {
+  border-bottom: none;
+}
+.apps-app-info .middle-wrapper .app-info-form .field .left-label {
+  margin-top: 12px;
+  float: left;
+  font-size: 18px;
+  padding-right: 60px;
+  color: var(--apple-ink-muted-48);
+}
+.apps-app-info .middle-wrapper .app-info-form .field .value {
+  padding-left: 200px;
+}
+.apps-app-info .middle-wrapper .app-info-form .field .value > input {
+  width: 500px;
+  font-size: 20px;
+  padding: 10px 24px;
+  border-radius: var(--apple-radius-xs);
+  border: 1px solid var(--apple-hairline);
+  color: var(--apple-ink);
+  background: var(--apple-parchment);
+}
+.apps-app-info .middle-wrapper .app-info-form .field .value > input[readonly] {
+  border-color: transparent;
+  padding-left: 0;
+  background: transparent;
+  cursor: default;
+}
+.apps-app-info .middle-wrapper .app-info-form .app-deletion .value {
+  padding-top: 12px;
+}
+.apps-app-info .middle-wrapper .app-info-form .app-deletion button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #EC4242;
+  color: #fff;
+  min-width: 200px;
+  padding: 12px 24px;
+  border: 1px solid #EC4242;
+  border-radius: var(--apple-radius-pill);
+  cursor: pointer;
+  font-family: var(--apple-font-text);
+  font-size: 17px;
+  font-weight: 400;
+  transition: all .15s;
+}
+.apps-app-info .middle-wrapper .app-info-form .app-deletion button:hover {
+  background: transparent;
+  color: #EC4242;
+}
+.apps-app-info .middle-wrapper .app-info-form .app-deletion .require-confirm {
+  background: transparent;
+  color: #EC4242;
+}
+.apps-app-info .middle-wrapper .app-info-form .app-deletion .require-confirm:hover {
+  background: #EC4242;
+  color: #fff;
+}
+.apps-app-info .middle-wrapper .app-info-form .app-deletion button span:first-child {
+  display: block;
+}
+.apps-app-info .middle-wrapper .app-info-form .app-deletion .require-confirm span:first-child {
+  display: none;
+}
+.apps-app-info .middle-wrapper .app-info-form .app-deletion .require-confirm span:last-child {
+  display: block;
+}
+.apps-app-info .middle-wrapper input {
+  background: var(--apple-parchment);
+}
+
+/* ══════════════════════════════════════════════════════
+   INTEGRATION PANEL
+   ══════════════════════════════════════════════════════ */
+
+.apps-app-integration {
+  padding-top: 45px;
+}
+.apps-app-integration .providers h2 {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 80px;
+  color: var(--apple-ink);
+}
+.apps-app-integration .providers h2:first-child {
+  margin-top: 0;
+}
+.apps-app-integration .providers .item {
+  padding: 60px 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--apple-hairline);
+  display: flex;
+  gap: 24px;
+}
+.apps-app-integration .providers .item.last {
+  border-bottom: none;
+}
+.apps-app-integration .providers .logo {
+  width: 300px;
+  flex-shrink: 0;
+  text-align: center;
+}
+.apps-app-integration .providers .logo img {
+  max-width: 180px;
+  max-height: 100px;
+}
+.apps-app-integration .providers .content {
+  flex: 1;
+}
+
+/* Webhook config */
+.configrations {
+  margin-top: 12px;
+}
+.configrations .config-name {
+  display: inline-block;
+  margin-left: 8px;
+  margin-bottom: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-pill);
+  font-size: 14px;
+  color: var(--apple-ink-muted-48);
+  text-decoration: none;
+  line-height: 24px;
+  min-width: 40px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.configrations .config-name:hover {
+  color: var(--apple-ink);
+  border-color: var(--apple-ink);
+}
+.configrations .add-config {
+  display: inline-block;
+  vertical-align: middle;
+  width: 26px;
+  height: 26px;
+  text-align: center;
+  border: 1px solid var(--apple-hairline);
+  border-radius: 50%;
+  line-height: 24px;
+  text-decoration: none;
+  margin-bottom: 8px;
+  color: var(--apple-ink-muted-48);
+  cursor: pointer;
+  transition: all .15s;
+}
+.configrations .add-config:hover {
+  color: var(--apple-ink);
+  border-color: var(--apple-ink);
+}
+.configrations .add-config .icon-plus {
+  font-size: 14px;
+}
+
+/* Webhook form */
+webhook-form-view div {
+  margin-top: 25px;
+  font-size: 0;
+}
+webhook-form-view div input {
+  display: inline-block;
+  margin-right: 20px;
+  vertical-align: middle;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-pill);
+  font-family: var(--apple-font-text);
+  color: var(--apple-ink);
+}
+webhook-form-view div .config-name {
+  width: 180px;
+}
+webhook-form-view div .config-url {
+  width: 280px;
+}
+webhook-form-view div button {
+  display: inline-block;
+  min-width: 100px;
+  height: 34px;
+  vertical-align: middle;
+  border-radius: var(--apple-radius-pill);
+  cursor: pointer;
+}
+webhook-form-view div button[disabled] {
+  cursor: not-allowed;
+  opacity: .5;
+}
+webhook-form-view div button.btn-link {
+  margin-left: 10px;
+  padding: 0;
+  text-decoration: none;
+  color: var(--apple-ink-muted-48);
+  min-width: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+webhook-form-view div button.btn-link i {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 32px;
+  transition: all .4s;
+}
+webhook-form-view div button.btn-link:hover i {
+  background: #EC4242;
+  color: #fff;
+}
+.url-invalid-tips {
+  font-size: 12px;
+  margin-top: 12px;
+  color: var(--apple-primary);
+}
+
+/* ══════════════════════════════════════════════════════
+   GUIDE PAGE
+   ══════════════════════════════════════════════════════ */
+
+.guide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1;
+}
+.guide > img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border: 0;
+}
+
+/* ══════════════════════════════════════════════════════
+   Pico CSS resets & overrides
+   ══════════════════════════════════════════════════════ */
+
+button:active,
+button:focus,
+button:focus:active {
+  outline: 0;
+}
+button:focus-visible {
+  outline: 2px solid var(--apple-primary-focus);
+  outline-offset: 2px;
+}
+
+/* Pico forms: override for admin panel look */
+form input:not([type="checkbox"]):not([type="radio"]) {
+  margin-bottom: 0;
+}
+
+/* Make Pico buttons use apple styling by default */
+button:not(.apple-btn-primary):not(.apple-btn-secondary-pill):not(.apple-btn-dark-utility):not(.btn-remove):not([role="button"]),
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  --pico-border-radius: var(--apple-radius-pill);
+  --pico-transition: transform 0.15s ease;
+}
+button:active:not(.btn-remove) {
+  transform: scale(0.95);
+}
