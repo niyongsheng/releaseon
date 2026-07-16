@@ -8,7 +8,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,9 @@ import static org.releaseon.utils.response.ResponseCode.USER_INVALID_ACCOUNT;
 
 @Controller
 public class UserController {
+
+    @Value("${app.version}")
+    private String appVersion;
 
     @Autowired
     private UserService userService;
@@ -93,7 +98,8 @@ public class UserController {
     }
 
     @GetMapping("/account/signin")
-    public String signin(HttpServletRequest request) {
+    public String signin(HttpServletRequest request, Model model) {
+        model.addAttribute("version", appVersion);
         return "signin";
     }
 
