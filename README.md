@@ -8,6 +8,10 @@
 
 **Tech Stack**: Java 21, Spring Boot 3.3, Shiro 3.0, Thymeleaf, MySQL 8, Gradle 8.8
 
+## Screenshot
+
+<img src="./docs/app_screenshot.gif" width="720" alt="Releaseon screenshot">
+
 ## Quick Start
 
 ```bash
